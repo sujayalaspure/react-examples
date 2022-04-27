@@ -1,0 +1,11 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.App {
+  background-color: aqua;
+  height: 100vh;
+  width: 100vw;
+}
