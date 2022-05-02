@@ -1,0 +1,17 @@
+const theme = {
+  fz: { xxs: " 12px", xs: "13px", sm: "14px", md: "16px", lg: "18px", xl: "20px", xxl: " 22px" },
+  color: {
+  darknavy: hsl(216, 86%, 6%),
+  navy: hsl(216, 65%, 11%),
+  lightnavy: hsl(218, 58%, 16%),
+  lightestnavy: hsl(218, 41%, 23%),
+  navyshadow: hsla(216, 86%, 6%, 0.7),
+  darkslate: hsl(220, 21%, 36%),
+  slate: hsl(225, 20%, 61%),
+  lightslate: hsl(225, 31%, 74%),
+  lightestslate: hsl(226, 70%, 88%),
+  white: #e6f1ff,
+  accent: hsl(33, 90%, 65%),
+  accenttint: hsla(33, 100%, 70%, 0.1),
+  },
+},

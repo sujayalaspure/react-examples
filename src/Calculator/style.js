@@ -8,7 +8,7 @@ const colors = {
 
 export const CalculatorWrapper = styled.div`
   display: flex;
-  height: 100%;
+  height: 100vh;
   align-items: center;
   justify-content: center;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
