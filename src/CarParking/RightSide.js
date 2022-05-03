@@ -14,4 +14,5 @@ export default RightSide;
 
 const Container = styled.div`
   background-color: #f5f;
+  padding: 5rem 0;
 `;

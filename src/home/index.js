@@ -1,4 +1,5 @@
 import React from "react";
+import Menu from "../Components/menu";
 import { Container, HeaderWrapper, LeftSide, MainContent } from "./Style";
 
 function Home() {
@@ -6,6 +7,9 @@ function Home() {
     <Container>
       <LeftSide>
         <h2>LeftSide</h2>
+        <Menu.Item label="Item no 1" />
+        <Menu.Item label="Item no 1" />
+        <Menu.Item label="Item no 1" />
       </LeftSide>
 
       <MainContent>

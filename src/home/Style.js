@@ -8,7 +8,8 @@ export const Container = styled.div`
 
 export const LeftSide = styled.div`
   min-width: 25vw;
-  background-color: #f5f;
+  border-right: 1px solid var(--accent-tint);
+  /* background-color: #f5f; */
 `;
 
 export const MainContent = styled.div``;

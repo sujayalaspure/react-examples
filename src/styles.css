@@ -16,7 +16,7 @@
   --lightest-slate: hsl(226, 70%, 88%);
   --white: #e6f1ff;
   --accent: hsl(200, 95%, 14%);
-  --accent-tint: hsla(33, 100%, 70%, 0.1);
+  --accent-tint: hsla(200, 100%, 70%, 0.2);
   --font-sans: "Poppins", "Inter", "San Francisco", "SF Pro Text", -apple-system, system-ui, sans-serif;
   --font-mono: "Roboto Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
   --fz-xxs: 12px;
@@ -92,6 +92,27 @@ a:focus {
   text-decoration-skip-ink: auto;
 }
 
+@keyframes ripple {
+  0% {
+    transform: translate(-100%, -100%);
+  }
+  80% {
+    transform: translate(-100%, -100%) scale(50);
+  }
+  100% {
+    transform: translate(-100%, -100%) scale(50);
+    opacity: 0;
+  }
+}
+
+@keyframes fade {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
 .App {
   /* background-color: aqua; */
   height: 100vh;
