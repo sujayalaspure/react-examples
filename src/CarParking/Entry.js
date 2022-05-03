@@ -72,8 +72,6 @@ const Container = styled.div`
   background-color: #fff;
 `;
 
-const CarType = styled.div``;
-
 const ActionItem = styled.div`
   display: flex;
   flex-direction: column;

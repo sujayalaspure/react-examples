@@ -11,16 +11,16 @@ function CarParking() {
   const [dummy, setDummy] = useState(true);
   const [lastBooked, setLastBooked] = useState(null);
 
-  const updateSlot = (slot) => {
-    console.log("slot -->", slot);
-    const newSlots = slots.map((s) => {
-      if (s.id === slot.id) {
-        return { ...slot, status: !slot.status, exitTime: new Date() };
-      }
-      return s;
-    });
-    setSlots(newSlots);
-  };
+  // const updateSlot = (slot) => {
+  //   console.log("slot -->", slot);
+  //   const newSlots = slots.map((s) => {
+  //     if (s.id === slot.id) {
+  //       return { ...slot, status: !slot.status, exitTime: new Date() };
+  //     }
+  //     return s;
+  //   });
+  //   setSlots(newSlots);
+  // };
   const onsubmit = (data) => {
     if (data.carType === "" || data.entryTime === "" || data.carNumber === "") {
       alert("Please enter all the details");
