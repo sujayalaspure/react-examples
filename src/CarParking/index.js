@@ -1,96 +1,76 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import Entry from "./Entry";
-import Floor from "./Floor";
 import LeftSide from "./LeftSide";
 import MiddleSection from "./MiddleSection";
 import RightSide from "./RightSide";
-
-const defaultSlots = [
-  {
-    id: 1,
-    carType: "small",
-    entryTime: "",
-    exitTime: "",
-    status: true,
-  },
-  {
-    id: 2,
-    carType: "small",
-    entryTime: "",
-    exitTime: "",
-    status: true,
-  },
-  {
-    id: 3,
-    carType: "small",
-    entryTime: "",
-    exitTime: "",
-    status: true,
-  },
-  {
-    id: 4,
-    carType: "small",
-    entryTime: "",
-    exitTime: "",
-    status: false,
-  },
-  {
-    id: 5,
-    carType: "small",
-    entryTime: "",
-    exitTime: "",
-    status: true,
-  },
-];
+import parkingData from "./data";
 
 function CarParking() {
-  const [slots, setSlots] = useState(defaultSlots);
+  const [slots, setSlots] = useState([...parkingData]);
   const [empty, setEmpty] = useState(0);
   const [dummy, setDummy] = useState(true);
+  const [lastBooked, setLastBooked] = useState(null);
 
-  const updateSlot = (slot) => {
-    console.log("slot -->", slot);
-    const newSlots = slots.map((s) => {
-      if (s.id === slot.id) {
-        return { ...slot, status: !slot.status, exitTime: new Date() };
-      }
-      return s;
-    });
-    setSlots(newSlots);
-  };
+  // const updateSlot = (slot) => {
+  //   console.log("slot -->", slot);
+  //   const newSlots = slots.map((s) => {
+  //     if (s.id === slot.id) {
+  //       return { ...slot, status: !slot.status, exitTime: new Date() };
+  //     }
+  //     return s;
+  //   });
+  //   setSlots(newSlots);
+  // };
   const onsubmit = (data) => {
-    console.log("entry -->", data);
-    let temp = slots;
-    const idx = slots.findIndex((s) => s.status === true);
-    console.log("idx -->", idx);
-    if (idx !== -1) {
-      temp[idx].entryTime = data.entryTime;
-      temp[idx].carType = data.carType;
-      temp[idx].status = false;
-
-      console.log("temp -->", temp);
-      setSlots(temp);
-      setDummy(!dummy);
+    if (data.carType === "" || data.entryTime === "" || data.carNumber === "") {
+      alert("Please enter all the details");
+      return;
     }
+    let idx = -1;
+    const indixes = [-1, -1];
+
+    for (let index = 0; index < slots.length; index++) {
+      const s = slots[index];
+      idx = s?.lots.findIndex((t) => t.status === false);
+      if (idx !== -1) {
+        indixes[0] = index;
+        indixes[1] = idx;
+        break;
+      }
+    }
+
+    let temp = slots;
+    if (indixes[0] !== -1 && indixes[1] !== -1) {
+      temp[indixes[0]].lots[indixes[1]].status = true;
+      temp[indixes[0]].lots[indixes[1]].entryTime = data.entryTime;
+      temp[indixes[0]].lots[indixes[1]].carType = data.carType;
+      setSlots(temp);
+      setEmpty((prev) => prev - 1);
+
+      setLastBooked({ data, lotId: `${temp[indixes[0]].id}-${temp[indixes[0]].lots[indixes[1]].id}` });
+    } else {
+      alert("Sorry, parking lot is full");
+    }
+    setDummy(!dummy);
   };
 
   useEffect(() => {
-    console.log("slots -->");
     let count = 0;
-    slots.forEach((s) => {
-      if (s.status) {
-        count++;
-      }
+    slots?.forEach((s) => {
+      s?.lots.forEach((l) => {
+        if (l.status === false) {
+          count++;
+        }
+      });
     });
     setEmpty(count);
-  }, [slots]);
+  }, []);
 
   return (
     <Container>
-      <LeftSide />
+      <LeftSide onsubmit={onsubmit} />
       <MiddleSection />
-      <RightSide />
+      <RightSide lastBooked={lastBooked} onsubmit={onsubmit} count={empty} />
       {/* <Entry empty={empty} onsubmit={onsubmit} /> */}
       {/* <Floor slots={slots} updateSlot={updateSlot} /> */}
     </Container>
