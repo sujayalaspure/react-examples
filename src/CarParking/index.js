@@ -100,7 +100,7 @@ function CarParking() {
 export default CarParking;
 
 const Container = styled.div`
-  height: 100%;
+  height: 100vh;
   background-color: #fff;
   display: grid;
   grid-template-columns: max-content auto max-content;

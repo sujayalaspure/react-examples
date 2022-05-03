@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import "./style.css";
 
-function Floor({ slots, updateSlot }) {
+function Floor({ floor, slots, updateSlot }) {
   return (
     <div>
       <div className="floor">
         <div className="floor-number">
-          <span>Floor 1</span>
+          <span>Floor {floor}</span>
         </div>
         <div className="slots">
           {slots.map((slot) => {
