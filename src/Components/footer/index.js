@@ -4,7 +4,7 @@ import styled from "styled-components";
 function Footer() {
   return (
     <Container>
-      <a href={"#"} target="_blank" rel="noopener noreferrer">
+      <a href="https://alaspuresujay.github.io/" target="_blank" rel="noopener noreferrer">
         Designed & Built by Sujay Alaspure
       </a>
       <Legal>

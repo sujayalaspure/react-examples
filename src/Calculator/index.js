@@ -1,3 +1,4 @@
+/* eslint-disable no-eval */
 import React, { useState } from "react";
 import { BoxWrapper, Button, ButtonWrapper, CalculatorWrapper, Display, OperandsWrapper } from "./style";
 
