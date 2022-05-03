@@ -64,7 +64,7 @@ function CarParking() {
       });
     });
     setEmpty(count);
-  }, []);
+  }, [slots]);
 
   return (
     <Container>
