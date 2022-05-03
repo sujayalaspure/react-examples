@@ -1,0 +1,133 @@
+const data = [
+  {
+    id: "F1",
+    lots: [
+      {
+        id: "F1-1",
+        carType: "small",
+        entryTime: "",
+        exitTime: "",
+        status: false,
+      },
+      {
+        id: "F1-2",
+        carType: "small",
+        entryTime: "",
+        exitTime: "",
+        status: false,
+      },
+      {
+        id: "F1-3",
+        carType: "small",
+        entryTime: "",
+        exitTime: "",
+        status: true,
+      },
+    ],
+  },
+  {
+    id: "F2",
+    lots: [
+      {
+        id: "F2-1",
+        carType: "small",
+        entryTime: "",
+        exitTime: "",
+        status: false,
+      },
+      {
+        id: "F2-2",
+        carType: "small",
+        entryTime: "",
+        exitTime: "",
+        status: false,
+      },
+      {
+        id: "F2-3",
+        carType: "small",
+        entryTime: "",
+        exitTime: "",
+        status: false,
+      },
+      {
+        id: "F2-4",
+        carType: "small",
+        entryTime: "",
+        exitTime: "",
+        status: false,
+      },
+      {
+        id: "F2-5",
+        carType: "small",
+        entryTime: "",
+        exitTime: "",
+        status: true,
+      },
+      {
+        id: "F2-6",
+        carType: "small",
+        entryTime: "",
+        exitTime: "",
+        status: false,
+      },
+      {
+        id: "F2-7",
+        carType: "small",
+        entryTime: "",
+        exitTime: "",
+        status: false,
+      },
+      {
+        id: "F2-8",
+        carType: "small",
+        entryTime: "",
+        exitTime: "",
+        status: false,
+      },
+      {
+        id: "F2-9",
+        carType: "small",
+        entryTime: "",
+        exitTime: "",
+        status: false,
+      },
+      {
+        id: "F2-10",
+        carType: "small",
+        entryTime: "",
+        exitTime: "",
+        status: true,
+      },
+      {
+        id: "F2-11",
+        carType: "small",
+        entryTime: "",
+        exitTime: "",
+        status: false,
+      },
+      {
+        id: "F2-12",
+        carType: "small",
+        entryTime: "",
+        exitTime: "",
+        status: true,
+      },
+      {
+        id: "F2-13",
+        carType: "small",
+        entryTime: "",
+        exitTime: "",
+        status: false,
+      },
+      {
+        id: "F2-14",
+        carType: "small",
+        entryTime: "",
+        exitTime: "",
+        status: true,
+      },
+    ],
+  },
+];
+
+export default data;

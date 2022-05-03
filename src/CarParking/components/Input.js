@@ -1,8 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 
-function Input({ placeholder, type, other }) {
-  return <InputWrapper placeholder={placeholder} type={type} {...other} />;
+function Input({ placeholder, type, onChange, name, value, other }) {
+  return (
+    <InputWrapper placeholder={placeholder} name={name} value={value} onChange={onChange} type={type} {...other} />
+  );
 }
 
 export default Input;

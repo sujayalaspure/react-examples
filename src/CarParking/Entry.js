@@ -5,8 +5,9 @@ import Input from "./components/Input";
 
 function Entry({ onsubmit, empty }) {
   const [data, setData] = useState({
-    carType: "",
+    carType: "2wheeler",
     entryTime: "",
+    carNumber: "",
   });
 
   const handleChange = (event) => {
@@ -20,10 +21,14 @@ function Entry({ onsubmit, empty }) {
   return (
     <Container>
       <h1>Entry Form</h1>
-      <form onsubmit={() => onsubmit(data)}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onsubmit(data);
+        }}>
         <ActionItem>
-          <label for="carType">Select a Car type</label>
-          <Select id="carType" name="carType" onChange={handleChange}>
+          <label>Select a Car type</label>
+          <Select name="carType" onChange={handleChange}>
             <option value="2wheeler">Motor Cycle</option>
             <option value="small">small</option>
             <option value="medium">Medium</option>
@@ -33,11 +38,17 @@ function Entry({ onsubmit, empty }) {
 
         <ActionItem>
           <label>Car Number</label>
-          <Input placeholder="Car Number" />
+          <Input onChange={handleChange} value={data.carNumber} name="carNumber" placeholder="Car Number" />
         </ActionItem>
         <ActionItem>
           <label>Entry time</label>
-          <Input name="entryTime" onChange={handleChange} type="datetime-local" placeholder="Time" />
+          <Input
+            name="entryTime"
+            value={data.entryTime}
+            onChange={handleChange}
+            type="datetime-local"
+            placeholder="Time"
+          />
         </ActionItem>
 
         <Button type="submit" label={"Submit"} />
