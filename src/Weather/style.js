@@ -7,6 +7,7 @@ const colors = {
 };
 
 export const Wrapper = styled.div`
+  background-color: #fff;
   display: flex;
   height: 100vh;
   align-items: center;
@@ -20,6 +21,8 @@ export const BoxWrapper = styled.div`
   border: 1px dashed ${colors.background};
   min-height: 100px;
   min-width: 300px;
+  max-width: 600px;
+  width: 100%;
   border-radius: 0.5rem;
   overflow: hidden;
   padding: 0.5rem;
