@@ -5,6 +5,7 @@ import Calculator from "./Calculator";
 import "./styles.css";
 import Footer from "./Components/footer";
 import Home from "./home";
+import Weather from "./Weather";
 
 function App() {
   return (
@@ -13,8 +14,9 @@ function App() {
         <Route exact path="/" element={<Home />} />
         <Route path="/parking" element={<CarParking />} />
         <Route path="/calculator" element={<Calculator />} />
+        <Route path="/weather" element={<Weather />} />
       </Routes>
-      <Footer />
+      {/* <Footer /> */}
     </BrowserRouter>
   );
 }
