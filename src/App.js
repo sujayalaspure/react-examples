@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import CarParking from "./CarParking";
 import Calculator from "./Calculator";
 import "./styles.css";
-import Footer from "./Components/footer";
 import Home from "./home";
 import Weather from "./Weather";
 
