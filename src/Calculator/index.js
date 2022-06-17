@@ -21,11 +21,11 @@ function Calculator() {
   const onClick = (value) => {
     if ((ops.includes(value) && input === "") || (ops.includes(value) && ops.includes(input.slice(-1)))) return;
     setInput((prev) => prev + value);
-    console.log(value);
+    // console.log(value);
     if (!ops.includes(value)) setResult(eval(input + value));
   };
   const onSubmit = (e) => {
-    console.log(input);
+    // console.log(input);
     setInput(eval(input).toString());
   };
 

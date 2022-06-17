@@ -19,25 +19,34 @@ import { useSearchParams } from "react-router-dom";
 var days = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
 
 function Weather() {
-  let [searchParams] = useSearchParams();
+  let [searchParams, setSearchParams] = useSearchParams();
   const [location, setLocation] = useState({ lat: "19.0760", lon: "72.8777", loc: "Mumbai" });
   const [weatherData, setWeatherData] = useState(data);
   const [showInfo, setShowInfo] = useState(true);
+  // setSearchParams({ lat: "19.0760", lon: "72.8777", loc: "Mumbai" });
 
   // lat=30.7352&lon=79.0669&loc=Kedarnath
   useEffect(() => {
     let loc = { lat: "19.0760", lon: "72.8777", loc: "Mumbai" };
+    setSearchParams({ lat: "19.0760", lon: "72.8777", loc: "Mumbai" });
     searchParams.forEach((value, key) => {
       loc[key] = value;
     });
-    if (loc.lat !== "19.0760") setShowInfo(false);
+    if (loc.lat !== "19.0760" && loc.lon !== "72.8777") {
+      setShowInfo(false);
+      // setSearchParams(loc);
+    }
     setLocation(loc);
-    fetch(getOneCallUrl(loc))
-      .then((res) => res.json())
-      .then((data) => {
-        setWeatherData(data);
-      })
-      .then((err) => console.log(err));
+    try {
+      fetch(getOneCallUrl(loc))
+        .then((res) => res.json())
+        .then((data) => {
+          setWeatherData(data);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+
     return () => {};
   }, []);
 
@@ -84,13 +93,13 @@ const ShowDayForcast = (idx, dayData) => {
 
 const Info = () => {
   return (
-    <p>
+    <div>
       <span>
         Please enter the <b>lattitude</b> and <b>longitude</b> of the city you want to get the weather in the url param.
       </span>
       <p>
         ex: <span>weather?lat=19.0760&lon=72.8777&loc=mumbai</span>
       </p>
-    </p>
+    </div>
   );
 };
