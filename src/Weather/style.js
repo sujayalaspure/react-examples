@@ -35,6 +35,7 @@ export const Display = styled.div`
   /* font-size: 2rem; */
   padding: 1rem 0.5rem;
   margin-bottom: 0.5rem;
+  padding-right: 3rem;
   /* text-align: right; */
   border-bottom: 1px solid ${colors.secondary};
 `;

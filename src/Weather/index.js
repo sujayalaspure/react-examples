@@ -20,15 +20,17 @@ var days = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
 
 function Weather() {
   let [searchParams] = useSearchParams();
-  const [location, setLocation] = useState({ lat: "19.0760", lon: "72.8777", loc: "MUmbai" });
+  const [location, setLocation] = useState({ lat: "19.0760", lon: "72.8777", loc: "Mumbai" });
   const [weatherData, setWeatherData] = useState(data);
-  const [showInfo, setShowInfo] = useState(false);
+  const [showInfo, setShowInfo] = useState(true);
 
+  // lat=30.7352&lon=79.0669&loc=Kedarnath
   useEffect(() => {
-    let loc = {};
+    let loc = { lat: "19.0760", lon: "72.8777", loc: "Mumbai" };
     searchParams.forEach((value, key) => {
       loc[key] = value;
     });
+    if (loc.lat !== "19.0760") setShowInfo(false);
     setLocation(loc);
     fetch(getOneCallUrl(loc))
       .then((res) => res.json())
