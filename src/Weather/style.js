@@ -7,7 +7,7 @@ const colors = {
 };
 
 export const Wrapper = styled.div`
-  background-color: #fff;
+  /* background-color: #fff; */
   display: flex;
   height: 100vh;
   align-items: center;

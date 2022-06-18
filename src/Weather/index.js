@@ -81,9 +81,13 @@ function Weather() {
 export default Weather;
 
 const ShowDayForcast = (idx, dayData) => {
+  let date = new Date(dayData.dt * 1000);
+  // date = date.getDate();
   return (
     <DayWrapper key={idx}>
-      <p>{days[new Date(dayData.dt * 1000).getDay()]}</p>
+      <p>
+        {days[date.getDay()]} ({date.getDate()})
+      </p>
       <SmallIcon src={getIcon(dayData.weather[0].icon)} />
       <h2>{dayData.temp.day}&#176;C</h2>
       <p>{dayData.weather[0].description}</p>
