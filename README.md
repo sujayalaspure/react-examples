@@ -2,4 +2,4 @@
 
 <https://r-example.netlify.app/calculator>
 
-<https://r-example.netlify.app/weather?lat=30.7352&lon=79.0669&loc=Kedarnath>
+<https://r-example.netlify.app/weather?lat=19.0760&lon=72.8777&loc=Mumbai>
