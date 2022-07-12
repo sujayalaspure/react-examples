@@ -5,6 +5,7 @@ import Calculator from "./Calculator";
 import "./styles.css";
 import Home from "./home";
 import Weather from "./Weather";
+import Chessboard from "./chessboard";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/parking" element={<CarParking />} />
         <Route path="/calculator" element={<Calculator />} />
         <Route path="/weather" element={<Weather />} />
+        <Route path="/chessboard" element={<Chessboard />} />
       </Routes>
       {/* <Footer /> */}
     </BrowserRouter>
