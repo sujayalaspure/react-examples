@@ -1,9 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
+import Footer from "../Components/footer";
 import Menu from "../Components/menu";
 import { paths } from "./path";
-import { Container, HeaderWrapper, LeftSide, MainContent } from "./Style";
+import { Container, HeaderWrapper, LeftSide, MainContent, RightSide } from "./Style";
 
 function Home() {
   let navigate = useNavigate();
@@ -14,18 +14,21 @@ function Home() {
   };
   return (
     <Container>
-      <LeftSide>
-        {paths.map((path, index) => (
-          <Menu.Item label={path.Label} onClick={() => onClick(path.path)} />
-        ))}
-      </LeftSide>
+      <HeaderWrapper>
+        <h1>Welcome to the Home</h1>
+      </HeaderWrapper>
 
       <MainContent>
-        <HeaderWrapper>
-          <h1>Welcome to the Home</h1>
-        </HeaderWrapper>
-        <h2>MainContent</h2>
+        <LeftSide>
+          {paths.map((path, index) => (
+            <Menu.Item label={path.Label} onClick={() => onClick(path.path)} />
+          ))}
+        </LeftSide>
+        <RightSide>
+          <h2>MainContent</h2>
+        </RightSide>
       </MainContent>
+      <Footer />
     </Container>
   );
 }

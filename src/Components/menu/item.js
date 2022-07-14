@@ -13,15 +13,15 @@ export default item;
 
 const Container = styled.div`
   height: 50px;
-  background-color: var(--white);
+  /* background-color: var(--white); */
   display: flex;
   justify-content: flex-start;
   align-items: center;
   padding: 8px 24px;
   cursor: pointer;
-  border-bottom: 0.5px solid var(--slate);
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
   &:hover {
-    background-color: var(--lightest-slate);
+    background-color: rgba(0, 0, 0, 0.05);
   }
   transition: 0.5s;
   /* background-color: $shocking-pink; */
