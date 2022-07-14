@@ -1,12 +1,12 @@
 import React, { Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import CarParking from "./CarParking";
-import Calculator from "./Calculator";
 import "./styles.css";
+const Calculator = React.lazy(() => import("./Projects/Calculator"));
+const CarParking = React.lazy(() => import("./Projects/CarParking"));
 const Home = React.lazy(() => import("./home"));
-const Weather = React.lazy(() => import("./Weather"));
-const Chessboard = React.lazy(() => import("./chessboard"));
-const NestedComments = React.lazy(() => import("./nested-comments"));
+const Weather = React.lazy(() => import("./Projects/Weather"));
+const Chessboard = React.lazy(() => import("./Projects/chessboard"));
+const NestedComments = React.lazy(() => import("./Projects/nested-comments"));
 
 function App() {
   return (
