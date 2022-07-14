@@ -1,0 +1,42 @@
+export const data = [
+  {
+    id: "n0",
+    content: "n0 lorem ipsum nesting level 0",
+    Author: "John Doe",
+    createdAt: "2020-01-01",
+    parentId: null,
+    likes: 0,
+  },
+  {
+    id: "n1",
+    content: "n1 second comment of nesting level 0",
+    Author: "John Doe",
+    createdAt: "2020-01-01",
+    parentId: null,
+    likes: 2,
+  },
+  {
+    id: "n2",
+    content: "n2 first comment of nesting level 1",
+    Author: "John Doe",
+    createdAt: "2020-01-01",
+    parentId: "n0",
+    likes: 10,
+  },
+  {
+    id: "n3",
+    content: "n3 second comment of nesting level 1",
+    Author: "John Doe",
+    createdAt: "2020-01-01",
+    parentId: "n1",
+    likes: 0,
+  },
+  {
+    id: "n4",
+    content: "n4 first comment of nesting level 2",
+    Author: "John Doe",
+    createdAt: "2020-01-01",
+    parentId: "n3",
+    likes: 0,
+  },
+];
