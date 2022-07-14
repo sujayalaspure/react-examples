@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Footer from "../../Components/footer";
 import Comment from "./Comment";
 import { data } from "./data";
 import { Container } from "./style";
@@ -35,7 +36,7 @@ function NestedComments() {
       id: ID(),
       content,
       Author: "John Doe",
-      createdAt: new Date().toLocaleString(),
+      createdAt: new Date(),
       parentId: id,
       likes: 0,
     };
@@ -53,6 +54,7 @@ function NestedComments() {
           likeComment={likeComment}
         />
       ))}
+      <Footer />
     </Container>
   );
 }

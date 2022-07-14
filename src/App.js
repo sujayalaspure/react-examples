@@ -21,7 +21,6 @@ function App() {
           <Route path="/nested-comments" element={<NestedComments />} />
         </Routes>
       </Suspense>
-      {/* <Footer /> */}
     </BrowserRouter>
   );
 }

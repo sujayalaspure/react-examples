@@ -1,6 +1,7 @@
 /* eslint-disable no-eval */
 import React, { useState } from "react";
 import { BoxWrapper, Button, ButtonWrapper, CalculatorWrapper, Display, OperandsWrapper } from "./style";
+import Footer from "../../Components/footer";
 
 function Calculator() {
   const [input, setInput] = useState("");
@@ -55,6 +56,7 @@ function Calculator() {
           <Button onClick={del}>DEL</Button>
         </ButtonWrapper>
       </BoxWrapper>
+      <Footer />
     </CalculatorWrapper>
   );
 }

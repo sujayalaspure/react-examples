@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Container, Square, Row, Wrapper, Heading } from "./style";
+import Footer from "../../Components/footer";
 
 const rows = [0, 1, 2, 3, 4, 5, 6, 7];
 
@@ -58,6 +59,7 @@ function Chessboard() {
           );
         })}
       </Wrapper>
+      <Footer />
     </Container>
   );
 }

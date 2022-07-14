@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import Footer from "../../Components/footer";
 import LeftSide from "./LeftSide";
 import MiddleSection from "./MiddleSection";
 import RightSide from "./RightSide";
@@ -73,6 +74,7 @@ function CarParking() {
       <RightSide lastBooked={lastBooked} onsubmit={onsubmit} count={empty} />
       {/* <Entry empty={empty} onsubmit={onsubmit} /> */}
       {/* <Floor slots={slots} updateSlot={updateSlot} /> */}
+      <Footer />
     </Container>
   );
 }

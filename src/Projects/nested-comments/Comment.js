@@ -19,7 +19,7 @@ function Comment({ data, getReplies1, onReplyClick, likeComment }) {
           <CommentAuthor>{Author}</CommentAuthor>
           <CommentContent>{content}</CommentContent>
         </div>
-        <div>{createdAt}</div>
+        <div>{new Date(createdAt).toDateString()}</div>
       </CommentHeader>
       <CommentActionButtonWrapper>
         <button onClick={() => likeComment(dataId)}>Like</button>

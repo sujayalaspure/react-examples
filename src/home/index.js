@@ -1,15 +1,23 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+
 import Menu from "../Components/menu";
+import { paths } from "./path";
 import { Container, HeaderWrapper, LeftSide, MainContent } from "./Style";
 
 function Home() {
+  let navigate = useNavigate();
+
+  const onClick = (path) => {
+    console.log(path);
+    navigate(path);
+  };
   return (
     <Container>
       <LeftSide>
-        <h2>LeftSide</h2>
-        <Menu.Item label="Item no 1" />
-        <Menu.Item label="Item no 1" />
-        <Menu.Item label="Item no 1" />
+        {paths.map((path, index) => (
+          <Menu.Item label={path.Label} onClick={() => onClick(path.path)} />
+        ))}
       </LeftSide>
 
       <MainContent>
