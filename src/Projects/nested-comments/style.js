@@ -4,25 +4,14 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px;
-  background-color: rgba(170, 170, 170, 0.1);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  /* background-color: rgba(170, 170, 170, 0.1); */
+  /* border: 1px solid rgba(0, 0, 0, 0.1); */
 `;
 
 export const CommentWrapper = styled.div`
   padding: 10px 0 10px 10px;
-  border-radius: 5px;
   margin: 8px 0 8px 8px;
-
-  position: relative;
-  &::before {
-    content: "";
-    width: 1px;
-    min-height: 100%;
-    background-color: rgb(170, 170, 170);
-    position: absolute;
-    left: -10px;
-    top: 0;
-  }
+  border-left: 3px solid #6699ffaa;
 `;
 
 export const CommentHeader = styled.div`
@@ -37,7 +26,7 @@ export const CommentHeader = styled.div`
 export const CommentAuthor = styled.div`
   font-weight: bold;
   margin-right: 10px;
-  color: #333;
+  color: #6699ff;
 `;
 export const CommentContent = styled.div`
   color: #333;

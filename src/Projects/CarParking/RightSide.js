@@ -3,7 +3,6 @@ import styled from "styled-components";
 import Entry from "./Entry";
 
 function RightSide({ lastBooked, onsubmit, count }) {
-  // console.log("lastBooked -->", lastBooked);
   return (
     <Container>
       <Entry empty={count} onsubmit={onsubmit} />

@@ -11,7 +11,6 @@ function Chessboard() {
   });
   const onMouseOver = ({ row, col }) => {
     setCurrentSquare({ row, col });
-    console.log({ row, col });
   };
 
   return (

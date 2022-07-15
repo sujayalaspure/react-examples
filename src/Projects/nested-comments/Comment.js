@@ -7,7 +7,6 @@ function Comment({ data, getReplies1, onReplyClick, likeComment }) {
   const [showInput, setShowInput] = useState(false);
 
   const onPostReply = (content) => {
-    console.log(dataId, content);
     setShowInput(false);
     onReplyClick(dataId, content);
   };

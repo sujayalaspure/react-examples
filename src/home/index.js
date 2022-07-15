@@ -20,7 +20,6 @@ function Home() {
   });
 
   // const onClick = (path) => {
-  //   console.log(path);
   //   navigate(path);
   // };
   return (
@@ -49,7 +48,6 @@ function Home() {
 }
 
 const getContent = (path) => {
-  console.log(path);
   switch (path) {
     case "/calculator":
       return <Calculator />;

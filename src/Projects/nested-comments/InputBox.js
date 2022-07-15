@@ -7,8 +7,14 @@ function InputBox({ onPostReply }) {
     const text = e.target.value;
     if (text) setInputData(text);
   };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (inputData) onPostReply(inputData);
+    setInputData("");
+  };
   return (
-    <InputWrapper onSubmit={() => onPostReply(inputData)}>
+    <InputWrapper onSubmit={onSubmit}>
       <input autoFocus onChange={handleChange} type="text" placeholder="Write a comment..." />
       <button type="submit">Post</button>
     </InputWrapper>

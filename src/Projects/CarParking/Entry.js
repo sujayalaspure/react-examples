@@ -11,7 +11,6 @@ function Entry({ onsubmit, empty }) {
   });
 
   const handleChange = (event) => {
-    // console.log(event.target.value, event.target.name);
     const { name, value } = event.target;
     setData((prev) => ({
       ...prev,
