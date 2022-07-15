@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import Footer from "../Components/footer";
 import Menu from "../Components/menu";
 import { paths } from "./path";
@@ -12,17 +12,17 @@ import Chessboard from "../Projects/chessboard";
 import NestedComments from "../Projects/nested-comments";
 
 function Home() {
-  let navigate = useNavigate();
+  // let navigate = useNavigate();
 
   const [selectedProject, setSelectedProject] = useState({
     path: "/",
     Label: "Home",
   });
 
-  const onClick = (path) => {
-    console.log(path);
-    navigate(path);
-  };
+  // const onClick = (path) => {
+  //   console.log(path);
+  //   navigate(path);
+  // };
   return (
     <Container>
       <HeaderWrapper>{/* <h1>Welcome to the Home</h1> */}</HeaderWrapper>
@@ -40,7 +40,6 @@ function Home() {
               <img src="https://img.icons8.com/cute-clipart/64/000000/external-link.png" />
             </div> */}
           </LabelHeader>
-          {/* <h1>MainContent</h1> */}
           <div className="main-content">{getContent(selectedProject.path)}</div>
         </RightSide>
       </MainContent>
