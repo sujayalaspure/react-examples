@@ -3,18 +3,12 @@ import styled from "styled-components";
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
-  /* justify-content: center; */
-  width: 100vw;
-  height: 100%;
   padding: 20px;
   background-color: rgba(170, 170, 170, 0.1);
   border: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
 export const CommentWrapper = styled.div`
-  /* background-color: rgba(170, 170, 170, 0.1); */
-  /* border: 1px solid rgba(0, 0, 0, 0.1); */
   padding: 10px 0 10px 10px;
   border-radius: 5px;
   margin: 8px 0 8px 8px;

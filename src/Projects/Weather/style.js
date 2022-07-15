@@ -9,7 +9,7 @@ const colors = {
 export const Wrapper = styled.div`
   /* background-color: #fff; */
   display: flex;
-  height: 100vh;
+  height: 100%;
   align-items: center;
   justify-content: center;
   padding: 1rem;

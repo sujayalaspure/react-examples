@@ -8,9 +8,10 @@ const colors = {
 
 export const CalculatorWrapper = styled.div`
   display: flex;
-  height: 100vh;
+  height: 100%;
   align-items: center;
   justify-content: center;
+
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 `;
 

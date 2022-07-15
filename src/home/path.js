@@ -1,9 +1,5 @@
 export const paths = [
   {
-    path: "/",
-    Label: "Home",
-  },
-  {
     path: "/calculator",
     Label: "Calculator",
   },

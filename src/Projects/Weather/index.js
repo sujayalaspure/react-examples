@@ -22,8 +22,7 @@ function Weather() {
   let [searchParams, setSearchParams] = useSearchParams();
   const [location, setLocation] = useState({ lat: "19.0760", lon: "72.8777", loc: "Mumbai" });
   const [weatherData, setWeatherData] = useState(data);
-  const [showInfo, setShowInfo] = useState(true);
-  // setSearchParams({ lat: "19.0760", lon: "72.8777", loc: "Mumbai" });
+  const [showInfo, setShowInfo] = useState(false);
 
   // lat=30.7352&lon=79.0669&loc=Kedarnath
   useEffect(() => {
@@ -56,7 +55,7 @@ function Weather() {
     <Wrapper>
       <BoxWrapper>
         <InfoWrapper onClick={() => setShowInfo((prev) => !prev)}>
-          <img src="https://img.icons8.com/material-outlined/24/undefined/info--v1.png" alt="Info" />
+          <img src="https://img.icons8.com/material-outlined/24/000000/info--v1.png" alt="Info" />
           {showInfo && Info()}
         </InfoWrapper>
         <Display>
