@@ -1,5 +1,7 @@
 import React, { Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import FalconUI from "./Projects/Falcon9UI";
+import FolderStructure from "./Projects/folder-structure";
 import "./styles.css";
 const Calculator = React.lazy(() => import("./Projects/Calculator"));
 const CarParking = React.lazy(() => import("./Projects/CarParking"));
@@ -21,6 +23,8 @@ function App() {
           <Route path="/chessboard" element={<Chessboard />} />
           <Route path="/nested-comments" element={<NestedComments />} />
           <Route path="/typeahead" element={<Typeahead />} />
+          <Route path="/folder" element={<FolderStructure />} />
+          <Route path="/falcon" element={<FalconUI />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
@@ -28,7 +32,3 @@ function App() {
 }
 
 export default App;
-
-// UI
-//  select the car - small, medium, large
-//  entry time
