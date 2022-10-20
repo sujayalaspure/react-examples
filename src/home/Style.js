@@ -1,23 +1,24 @@
-import styled from "styled-components";
+import styled from "styled-components"
 
 export const Container = styled.div`
   height: 100vh;
   display: grid;
   grid-template-rows: max-content auto;
-`;
+  /* position: relative; */
+`
 
 export const LeftSide = styled.div`
   height: 100%;
   padding-top: 8px;
   min-width: 25vw;
   border-right: 1px solid var(--accent-tint);
-`;
+`
 
 export const MainContent = styled.div`
   display: grid;
   grid-template-columns: max-content auto;
   /* height: 100%; */
-`;
+`
 
 export const HeaderWrapper = styled.div`
   display: flex;
@@ -27,7 +28,7 @@ export const HeaderWrapper = styled.div`
   background-color: var(--white);
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   z-index: 100;
-`;
+`
 
 export const RightSide = styled.div`
   height: 100%;
@@ -35,7 +36,7 @@ export const RightSide = styled.div`
     flex: 1;
     margin: 16px;
   }
-`;
+`
 
 export const LabelHeader = styled.div`
   background-color: aquamarine;
@@ -58,4 +59,4 @@ export const LabelHeader = styled.div`
       width: 40px;
     }
   }
-`;
+`
