@@ -1,8 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useState } from "react"
 import { Card, Container, DateContainer, DateWrapper, FilterWrapper, Name, TimeContainer } from "./style"
-import rawData from "./rawData.json"
 import { useEffect } from "react"
-import Footer from "../../Components/footer"
 
 const holidayTypes = {
   all: "All",
