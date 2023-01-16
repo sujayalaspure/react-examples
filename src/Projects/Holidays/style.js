@@ -9,12 +9,14 @@ export const Container = styled.div`
 `
 
 export const FilterWrapper = styled.div`
+  width: 90%;
+  max-width: 300px;
   select {
     background-color: aliceblue;
     padding: 12px;
     margin: 4px 0;
     border-radius: 4px;
-    width: 300px;
+    width: 100%;
     /* border: 0; */
   }
 `
@@ -23,7 +25,8 @@ export const Card = styled.div`
   padding: 8px 12px;
   margin: 4px 0;
   border-radius: 4px;
-  width: 300px;
+  width: 90%;
+  max-width: 300px;
   display: grid;
   grid-template-columns: 60% 40%;
   align-items: center;
