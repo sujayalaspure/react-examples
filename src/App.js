@@ -1,8 +1,10 @@
 import React, { Suspense } from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
-import FalconUI from "./Projects/Falcon9UI"
-import FolderStructure from "./Projects/folder-structure"
 import "./styles.css"
+
+const FalconUI = React.lazy(() => import("./Projects/Falcon9UI"))
+const FolderStructure = React.lazy(() => import("./Projects/folder-structure"))
+const Holidays = React.lazy(() => import("./Projects/Holidays"))
 const Calculator = React.lazy(() => import("./Projects/Calculator"))
 const CarParking = React.lazy(() => import("./Projects/CarParking"))
 const Home = React.lazy(() => import("./home"))
@@ -25,6 +27,7 @@ function App() {
           <Route path="/typeahead" element={<Typeahead />} />
           <Route path="/folder" element={<FolderStructure />} />
           <Route path="/falcon" element={<FalconUI />} />
+          <Route path="/holidays" element={<Holidays />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
