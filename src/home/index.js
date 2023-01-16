@@ -1,28 +1,17 @@
 import React, { useState } from "react"
-// import { useNavigate } from "react-router-dom";
 import Footer from "../Components/footer"
 import Menu from "../Components/menu"
-import { paths } from "./path"
 import { Container, HeaderWrapper, LabelHeader, LeftSide, MainContent, RightSide } from "./Style"
 
-import Calculator from "../Projects/Calculator"
-import CarParking from "../Projects/CarParking"
-import Weather from "../Projects/Weather"
-import Chessboard from "../Projects/chessboard"
-import NestedComments from "../Projects/nested-comments"
 import GithubCornerIcon from "../Components/GithubCornerIcon"
+import { getComponents, paths } from "../Navigation/routes"
 
 function Home() {
-  // let navigate = useNavigate();
-
   const [selectedProject, setSelectedProject] = useState({
     path: "/",
     Label: "Home",
   })
 
-  // const onClick = (path) => {
-  //   navigate(path);
-  // };
   return (
     <>
       <GithubCornerIcon />
@@ -42,30 +31,13 @@ function Home() {
               <img src="https://img.icons8.com/cute-clipart/64/000000/external-link.png" />
             </div> */}
             </LabelHeader>
-            <div className="main-content">{getContent(selectedProject.path)}</div>
+            <div className="main-content">{getComponents[selectedProject.path.slice(1)]}</div>
           </RightSide>
         </MainContent>
         <Footer />
       </Container>
     </>
   )
-}
-
-const getContent = (path) => {
-  switch (path) {
-    case "/calculator":
-      return <Calculator />
-    case "/parking":
-      return <CarParking />
-    case "/weather":
-      return <Weather />
-    case "/chessboard":
-      return <Chessboard />
-    case "/nested-comments":
-      return <NestedComments />
-    default:
-      return <div />
-  }
 }
 
 export default Home

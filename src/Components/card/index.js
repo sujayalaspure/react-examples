@@ -1,10 +1,10 @@
-import React from "react";
-import styled from "styled-components";
+import React from "react"
+import styled from "styled-components"
 
-function Card() {
-  return <Container>Card</Container>;
+function Card({ children, style }) {
+  return <Container style={style}>{children}</Container>
 }
 
-export default Card;
+export default Card
 
-const Container = styled.div``;
+const Container = styled.div``
