@@ -1,12 +1,13 @@
-import styled from "styled-components"
-import COLORS from "../../utils/colors"
+import styled from "styled-components";
+import COLORS from "../../utils/colors";
 
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   /* justify-content: center; */
-`
+  margin-bottom: 10%;
+`;
 
 export const FilterWrapper = styled.div`
   width: 90%;
@@ -19,7 +20,7 @@ export const FilterWrapper = styled.div`
     width: 100%;
     /* border: 0; */
   }
-`
+`;
 export const Card = styled.div`
   background-color: aliceblue;
   padding: 8px 12px;
@@ -33,8 +34,8 @@ export const Card = styled.div`
   /* justify-content: space-between; */
   border-left: 4px solid;
   border-left-color: ${(_) => (_.mandatory ? COLORS.orange : "aliceblue")};
-`
-export const Name = styled.div``
+`;
+export const Name = styled.div``;
 export const DateWrapper = styled.div`
   /* flex: 0.5; */
   font-size: 14px;
@@ -44,12 +45,14 @@ export const DateWrapper = styled.div`
   /* background-color: yellow; */
   overflow: scroll;
   align-items: flex-end;
-`
+  overflow: hidden;
+`;
 export const DateContainer = styled.div`
   font-size: inherit;
   color: inherit;
-`
+  overflow: hidden;
+`;
 export const TimeContainer = styled.div`
   font-size: inherit;
   color: inherit;
-`
+`;
