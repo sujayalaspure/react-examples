@@ -20,9 +20,11 @@ function Home() {
 
         <MainContent>
           <LeftSide>
-            {paths.map((path, index) => (
-              <Menu.Item key={index} label={path.Label} onClick={() => setSelectedProject(path)} />
-            ))}
+            {paths
+              .filter((i) => i.showHome)
+              .map((path, index) => (
+                <Menu.Item key={index} label={path.Label} onClick={() => setSelectedProject(path)} />
+              ))}
           </LeftSide>
           <RightSide>
             <LabelHeader>
