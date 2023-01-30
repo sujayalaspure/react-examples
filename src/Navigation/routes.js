@@ -9,7 +9,9 @@ const Weather = React.lazy(() => import("../Projects/Weather"))
 const Chessboard = React.lazy(() => import("../Projects/chessboard"))
 const NestedComments = React.lazy(() => import("../Projects/nested-comments"))
 const Typeahead = React.lazy(() => import("../Projects/Typeahead"))
+const MapOfIndia = React.lazy(() => import("../Projects/mapofindia"))
 
+// [path]:Component
 export const getComponents = {
   calculator: <Calculator />,
   parking: <CarParking />,
@@ -20,7 +22,9 @@ export const getComponents = {
   folder: <FolderStructure />,
   falcon: <FalconUI />,
   holidays: <Holidays />,
+  mapofindia: <MapOfIndia />,
 }
+
 export const paths = [
   {
     path: "/calculator",
@@ -55,6 +59,11 @@ export const paths = [
   {
     path: "/typeahead",
     Label: "Typeahead",
+    showHome: false,
+  },
+  {
+    path: "/mapofindia",
+    Label: "Map Of India",
     showHome: false,
   },
 ]
