@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react"
-import { getIcon, getOneCallUrl } from "./api"
+import { getIcon, getLocationByIP, getWeatherData } from "./api"
 import {
   BoxWrapper,
   BottomWrapper,
@@ -16,38 +16,39 @@ import {
 import { useSearchParams } from "react-router-dom"
 import { isEmpty } from "lodash"
 
-var days = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"]
+var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
 function Weather() {
   let [searchParams, setSearchParams] = useSearchParams()
-  const [location, setLocation] = useState()
+  const [location, setLocation] = useState(null)
   const [weatherData, setWeatherData] = useState()
   const [showInfo, setShowInfo] = useState(false)
 
-  // lat=30.7352&lon=79.0669&loc=Kedarnath
-  // ?lat=25.31764&lon=82.97391&loc=Banaras
-  const getSearchParams = () => {
-    console.log([...searchParams].length, isEmpty(searchParams))
-    let loc = { lat: "19.0760", lon: "72.8777", loc: "Mumbai" }
+  const getSearchParams = async () => {
+    console.log(searchParams.toString(), isEmpty(searchParams))
+    let loc = {}
     if ([...searchParams].length === 0) {
-      setSearchParams({ lat: "19.0760", lon: "72.8777", loc: "Mumbai" })
-    }
-    try {
+      const { latitude: lat, longitude: lon, city } = await getLocationByIP()
+      setSearchParams({ lat, lon, city })
+      setLocation({ lat, lon, city })
+    } else {
       searchParams.forEach((value, key) => {
         loc[key] = value
-        console.log(key, value)
       })
-
       setLocation(loc)
-      fetch(getOneCallUrl(loc))
-        .then((res) => res.json())
-        .then((data) => {
-          setWeatherData(data)
-        })
-    } catch (error) {
-      console.log(error)
     }
   }
+
+  const getWeatherDataFromAPI = async () => {
+    const { lat, lon } = location
+    const data = await getWeatherData(lat, lon)
+    setWeatherData(data)
+  }
+
+  useEffect(() => {
+    if (location) getWeatherDataFromAPI()
+  }, [location])
+
   useEffect(() => {
     getSearchParams()
   }, [])
@@ -67,18 +68,20 @@ function Weather() {
         </InfoWrapper>
         <Display>
           <LocationWrapper>
-            <h1>{location?.loc}</h1>
+            <h1>{location?.city}</h1>
             <p>{date.toDateString()}</p>
           </LocationWrapper>
           <ImageWrapper>
-            <img src={getIcon(weatherData?.current?.weather[0].icon)} alt="Icon" />
+            {weatherData?.current?.weather[0].icon && (
+              <img src={getIcon(weatherData?.current?.weather[0].icon)} alt="Icon" />
+            )}
           </ImageWrapper>
           <TempWrapper>
             <span>{weatherData?.current?.temp}&#176;C</span>
             <p>{weatherData?.current?.weather[0]?.description}</p>
           </TempWrapper>
         </Display>
-        <BottomWrapper>{weatherData?.daily?.slice(0, 5).map((data, idx) => ShowDayForcast(idx, data))}</BottomWrapper>
+        <BottomWrapper>{weatherData?.daily?.slice(1, 6).map((data, idx) => ShowDayForcast(idx, data))}</BottomWrapper>
       </BoxWrapper>
     </Wrapper>
   )
@@ -88,7 +91,7 @@ export default Weather
 
 const ShowDayForcast = (idx, dayData) => {
   let date = new Date(dayData?.dt * 1000)
-  // date = date.getDate();
+
   return (
     <DayWrapper key={idx}>
       <p>
@@ -108,7 +111,7 @@ const Info = () => {
         Please enter the <b>lattitude</b> and <b>longitude</b> of the city you want to get the weather in the url param.
       </span>
       <p>
-        ex: <span>weather?lat=19.0760&lon=72.8777&loc=mumbai</span>
+        ex: <span>weather?lat=19.0760&lon=72.8777&city=mumbai</span>
       </p>
     </div>
   )
