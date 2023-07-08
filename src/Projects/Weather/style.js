@@ -7,7 +7,7 @@ const colors = {
 }
 
 export const Wrapper = styled.div`
-  /* background-color: #fff; */
+  background-color: #fff;
   display: flex;
   height: 100%;
   align-items: center;
@@ -67,6 +67,7 @@ export const TempWrapper = styled.div`
 export const BottomWrapper = styled.div`
   display: flex;
   justify-content: space-between;
+  overflow: scroll;
   /* flex-wrap: wrap; */
   /* background-color: ${colors.secondary}; */
 `

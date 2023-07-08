@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import COLORS from "../../utils/colors";
+import styled from "styled-components"
+import COLORS from "../../utils/colors"
 
 export const Container = styled.div`
   display: flex;
@@ -7,7 +7,7 @@ export const Container = styled.div`
   align-items: center;
   /* justify-content: center; */
   margin-bottom: 10%;
-`;
+`
 
 export const FilterWrapper = styled.div`
   width: 90%;
@@ -20,7 +20,7 @@ export const FilterWrapper = styled.div`
     width: 100%;
     /* border: 0; */
   }
-`;
+`
 export const Card = styled.div`
   background-color: aliceblue;
   padding: 8px 12px;
@@ -34,8 +34,14 @@ export const Card = styled.div`
   /* justify-content: space-between; */
   border-left: 4px solid;
   border-left-color: ${(_) => (_.mandatory ? COLORS.orange : "aliceblue")};
-`;
-export const Name = styled.div``;
+  /* Change to flex and direction column if screen size is smaller that 220 */
+  @media (max-width: 300px) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+`
+export const Name = styled.div``
 export const DateWrapper = styled.div`
   /* flex: 0.5; */
   font-size: 14px;
@@ -46,13 +52,19 @@ export const DateWrapper = styled.div`
   overflow: scroll;
   align-items: flex-end;
   overflow: hidden;
-`;
+  @media (max-width: 300px) {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 20px;
+  }
+`
 export const DateContainer = styled.div`
   font-size: inherit;
   color: inherit;
   overflow: hidden;
-`;
+`
 export const TimeContainer = styled.div`
   font-size: inherit;
   color: inherit;
-`;
+`

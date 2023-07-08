@@ -1,94 +1,55 @@
-import React, { useState } from "react";
-import { Box, Container, InputWrapper, State, StateWrapper } from "./style";
-
-const states = [
-  "Alabama",
-  "Alaska",
-  "Arizona",
-  "Arkansas",
-  "California",
-  "Colorado",
-  "Connecticut",
-  "Delaware",
-  "Florida",
-  "Georgia",
-  "Hawaii",
-  "Idaho",
-  "Illinois",
-  "Indiana",
-  "Iowa",
-  "Kansas",
-  "Kentucky",
-  "Louisiana",
-  "Maine",
-  "Maryland",
-  "Massachusetts",
-  "Michigan",
-  "Minnesota",
-  "Mississippi",
-  "Missouri",
-  "Montana",
-  "Nebraska",
-  "Nevada",
-  "New Hampshire",
-  "New Jersey",
-  "New Mexico",
-  "New York",
-  "North Carolina",
-  "North Dakota",
-  "Ohio",
-  "Oklahoma",
-  "Oregon",
-  "Pennsylvania",
-  "Rhode Island",
-  "South Carolina",
-  "South Dakota",
-  "Tennessee",
-  "Texas",
-  "Utah",
-  "Vermont",
-  "Virginia",
-  "Washington",
-  "West Virginia",
-  "Wisconsin",
-  "Wyoming",
-];
+import React, { useState } from "react"
+import { Box, Container, FilterWrapper, HeaderWrapper, InputWrapper, ListItem, StateWrapper } from "./style"
+import dummyData from "./dummydata.json"
 
 function Typeahead() {
-  const [stateNames, setStateNames] = useState([]);
+  const [data, setData] = useState([])
   // const [input, setInput] = useState("");
 
-  const filterStates = (states, search) => {
-    return states.filter((state) => isStartsWith(state, search));
-  };
+  const filterData = (searchText) => {
+    return dummyData.filter((state) => isStartsWith(state, searchText))
+  }
 
   const isStartsWith = (word, input) => {
-    return word.toUpperCase().startsWith(input.toUpperCase());
-  };
+    return word.toUpperCase().startsWith(input.toUpperCase())
+  }
 
   const handleChange = (e) => {
-    const text = e.target.value;
+    const text = e.target.value
     if (text.length > 0) {
-      setStateNames(filterStates(states, e.target.value));
+      setData(filterData(text))
     } else {
-      setStateNames([]);
+      setData([])
     }
-  };
+  }
+
+  const onChangeFilter = (e) => {}
 
   return (
     <Container>
       <Box>
-        <InputWrapper>
-          <input placeholder="Search... " onChange={handleChange} />
-        </InputWrapper>
+        <HeaderWrapper>
+          <InputWrapper>
+            <input placeholder="Search... " onChange={handleChange} />
+          </InputWrapper>
+          <FilterWrapper>
+            <select defaultValue={"Random"} onChange={onChangeFilter}>
+              <option value="Random">Random</option>
+              <option value="Countries">Countries</option>
+              <option value="States">States</option>
+            </select>
+          </FilterWrapper>
+        </HeaderWrapper>
         <StateWrapper>
-          {stateNames.map((state) => (
-            <State key={state}>{state}</State>
+          {data.map((state, i) => (
+            <ListItem delay={i} key={i}>
+              {state}
+            </ListItem>
           ))}
         </StateWrapper>
       </Box>
     </Container>
-  );
+  )
 }
 
-export default Typeahead;
+export default Typeahead

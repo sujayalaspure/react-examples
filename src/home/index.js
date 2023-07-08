@@ -5,8 +5,13 @@ import { Container, HeaderWrapper, LabelHeader, LeftSide, MainContent, RightSide
 
 import GithubCornerIcon from "../Components/GithubCornerIcon"
 import { getComponents, paths } from "../Navigation/routes"
+import { useSearchParams } from "react-router-dom"
 
 function Home() {
+  let [searchParams] = useSearchParams()
+  const testValue = [...searchParams]?.some((i) => i[0] === "test")
+  console.log(testValue)
+
   const [selectedProject, setSelectedProject] = useState({
     path: "/",
     Label: "Home",
@@ -21,17 +26,14 @@ function Home() {
         <MainContent>
           <LeftSide>
             {paths
-              .filter((i) => i.showHome)
+              .filter((i) => i.showHome || testValue)
               .map((path, index) => (
-                <Menu.Item key={index} label={path.Label} onClick={() => setSelectedProject(path)} />
+                <Menu.Item key={index} path={path.path} label={path.Label} onClick={() => setSelectedProject(path)} />
               ))}
           </LeftSide>
           <RightSide>
             <LabelHeader>
               <h1>{selectedProject.Label}</h1>
-              {/* <div className="external">
-              <img src="https://img.icons8.com/cute-clipart/64/000000/external-link.png" />
-            </div> */}
             </LabelHeader>
             <div className="main-content">{getComponents[selectedProject.path.slice(1)]}</div>
           </RightSide>

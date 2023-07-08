@@ -26,6 +26,8 @@ export const Box = styled.div`
 export const HeaderWrapper = styled.div`
   width: 100%;
   display: flex;
+  flex-direction: column;
+  gap: 10px;
   /* align-items: center; */
   justify-content: center;
 `
