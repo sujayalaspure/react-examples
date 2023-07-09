@@ -6,15 +6,19 @@ import {
   UploadButton,
   UploadImageContainer,
   UploadInput,
+  UploadLink,
 } from "./style"
 import { useCollection, useStorage } from "../../firebase"
+import { Link } from "react-router-dom"
 // import useStorage from "../../firebase/useStorage"
 
 function UploadImage() {
+  const fileInputRef = React.useRef(null)
   const [data, setData] = useState({
     url: "",
     description: "",
     fromLink: true,
+    file: null,
   })
   const [showImage, setShowImage] = useState(false)
   const [displayMsg, setDisplayMsg] = useState("")
@@ -35,7 +39,8 @@ function UploadImage() {
     })
   }
 
-  const onUploadClick = async () => {
+  const onUploadClick = async (e) => {
+    e.preventDefault()
     if (data.fromLink) {
       const success = await addDocument({
         description: data.description,
@@ -64,6 +69,7 @@ function UploadImage() {
             description: "",
             fromLink: true,
           })
+          fileInputRef.current.value = ""
           setShowImage(false)
           setDisplayMsg("Image uploaded successfully")
         }
@@ -120,11 +126,24 @@ function UploadImage() {
               src={data.url}
               alt={data.description}
             />
+            <span
+              onClick={() => {
+                fileInputRef.current.value = ""
+                setData({
+                  ...data,
+                  url: "",
+                  fromLink: true,
+                  file: null,
+                })
+              }}
+            >
+              x
+            </span>
           </SelectedImageContainer>
         )}
-        <div className="form">
+        <form className="form" onSubmit={onUploadClick}>
           <ImageSelector>
-            <input onChange={onFileUpload} type="file" accept="image/*" />
+            <input ref={fileInputRef} onChange={onFileUpload} type="file" accept="image/*" />
             {data.fromLink && (
               <>
                 <span>or</span>
@@ -140,11 +159,13 @@ function UploadImage() {
           </ImageSelector>
           <UploadInput
             value={data.description}
+            autoComplete="none"
             name="description"
             placeholder="Add description"
             onChange={onInputChange}
           />
           <UploadInput
+            autoComplete="current-password"
             type="password"
             placeholder="Type password to upload"
             onChange={(e) => {
@@ -152,6 +173,7 @@ function UploadImage() {
             }}
           />
           <UploadButton
+            type="submit"
             disabled={
               password !== process.env.REACT_APP_password || !(data.url && data.description) || uploadState.isUploading
             }
@@ -159,8 +181,11 @@ function UploadImage() {
           >
             {uploadState.isUploading ? `Uploading: ${uploadState.progress}%` : "Upload"}
           </UploadButton>
-        </div>
+        </form>
       </FormWrapper>
+      <UploadLink>
+        <Link to="/imagecarausal">Show galary</Link>
+      </UploadLink>
     </UploadImageContainer>
   )
 }
