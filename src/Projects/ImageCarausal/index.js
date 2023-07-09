@@ -45,7 +45,7 @@ function ImageCarausal() {
             >
               <Image
                 key={index}
-                width={width * 0.5}
+                width={width < 700 ? width - 20 : width * 0.5}
                 isSelected={index === selectedImage}
                 src={image.url}
                 alt={image.name}

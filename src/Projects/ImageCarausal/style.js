@@ -90,6 +90,9 @@ export const ImageSelector = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  @media screen and (max-width: 768px) {
+    width: 80vw;
+  }
 
   span {
     font-size: 0.8rem;
@@ -110,6 +113,7 @@ export const ImageSelector = styled.div`
     border: 1px solid #555;
     border-radius: 10px;
     padding-right: 10px;
+    overflow: hidden;
   }
   input[type="file"]::file-selector-button {
     margin-right: 20px;
