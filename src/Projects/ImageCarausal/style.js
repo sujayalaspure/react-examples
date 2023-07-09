@@ -51,13 +51,20 @@ export const ImagesWrapper = styled.div`
 export const ImageContainer = styled.div`
   border-radius: 10px;
   margin: 6px;
+  /* overflow: scroll; */
+  &:hover {
+    img {
+      /* ${(props) => props.isSelected && "transform: scale(0.9); object-fit: contain;"} */
+    }
+  }
 `
 
 export const Image = styled.img`
   ${(props) => !props.isSelected && "width: 100px;"}
-  transition: width 0.5s ease-in-out;
+  transition: width 0.5s ease-in-out, transform 0.5s ease-in-out;
   height: 100%;
   object-fit: cover;
+  /* object-position: top; */
   border-radius: 10px;
 `
 
@@ -66,12 +73,15 @@ export const UploadImageContainer = styled.div`
   align-items: center;
   justify-content: center;
   padding: 20px;
+  position: relative;
 `
 export const FormWrapper = styled.div`
+  background-color: #fff;
   display: flex;
   flex-direction: row;
-  gap: 20px;
   align-items: center;
+  justify-content: center;
+  gap: 20px;
   @media (max-width: 768px) {
     flex-direction: column;
   }
@@ -79,9 +89,12 @@ export const FormWrapper = styled.div`
     display: flex;
     gap: 20px;
     flex-direction: column;
+    /* border: 1px solid black; */
+    border-radius: 10px;
+    width: 100%;
   }
-  border: 1px solid black;
   padding: 20px;
+  border: 1px solid black;
   border-radius: 10px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
 `
@@ -152,13 +165,29 @@ export const UploadInput = styled.input`
 
 export const SelectedImageContainer = styled.div`
   border-radius: 10px;
+  width: 100%;
   overflow: hidden;
-  /* width: 80vh; */
-  /* aspect-ratio: 16/9; */
+  border: 1px solid black;
+  position: relative;
   img {
     height: 40vh;
     width: 100%;
     object-fit: contain;
+    image-orientation: from-image;
+  }
+  span {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    font-size: 2rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    text-align: center;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    background-color: #eef2f3;
+    color: #e60b09;
+    cursor: pointer;
   }
 `
 
