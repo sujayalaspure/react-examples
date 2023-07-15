@@ -14,6 +14,7 @@ const MapOfIndia = React.lazy(() => import("../Projects/mapofindia"))
 const DependantSearch = React.lazy(() => import("../Projects/DependantSearch"))
 const ImageCarausal = React.lazy(() => import("../Projects/ImageCarausal"))
 const UploadImage = React.lazy(() => import("../Projects/ImageCarausal/UploadImage"))
+const JSONDiffChecker = React.lazy(() => import("../Projects/jsonDiffChecker"))
 
 export const getComponents = {
   home: <Home />,
@@ -30,6 +31,7 @@ export const getComponents = {
   dependantsearch: <DependantSearch />,
   imagecarausal: <ImageCarausal />,
   uploadimage: <UploadImage />,
+  jsondiffchecker: <JSONDiffChecker />,
 }
 
 export const paths = [
@@ -109,6 +111,12 @@ export const paths = [
     path: "/imagecarausal/uploadimage",
     Label: "Upload Image",
     element: getComponents["uploadimage"],
+    showHome: false,
+  },
+  {
+    path: "/jsondiffchecker",
+    Label: "JSON Diff Checker",
+    element: getComponents["jsondiffchecker"],
     showHome: false,
   },
 ]
