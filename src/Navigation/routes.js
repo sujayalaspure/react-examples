@@ -51,7 +51,7 @@ export const paths = [
     path: "/parking",
     Label: "Parking System",
     element: getComponents["parking"],
-    showHome: true,
+    showHome: false,
   },
   {
     path: "/weather",
@@ -75,13 +75,13 @@ export const paths = [
     path: "/holidays",
     Label: "Current Year Holidays",
     element: getComponents["holidays"],
-    showHome: true,
+    showHome: false,
   },
   {
     path: "/typeahead",
     Label: "Typeahead",
     element: getComponents["typeahead"],
-    showHome: false,
+    showHome: true,
   },
   {
     path: "/mapofindia",
@@ -105,7 +105,7 @@ export const paths = [
     path: "/imagecarausal",
     Label: "Image Carausal",
     element: getComponents["imagecarausal"],
-    showHome: false,
+    showHome: true,
   },
   {
     path: "/imagecarausal/uploadimage",
@@ -117,6 +117,6 @@ export const paths = [
     path: "/jsondiffchecker",
     Label: "JSON Diff Checker",
     element: getComponents["jsondiffchecker"],
-    showHome: false,
+    showHome: true,
   },
 ]

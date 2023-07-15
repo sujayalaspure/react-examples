@@ -1,211 +1,185 @@
-import React, { useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import {
   Body,
   Button,
-  Code,
-  Col,
   Container,
-  FileContentPreview,
-  FileNamePreview,
-  FileSelector,
+  FileContentContainer,
+  FooterButtons,
   Header,
-  KeyWrapper,
-  Row,
+  RightSideBar,
+  ToastWrapper,
 } from "./style"
 import useDiff from "./useDiff"
+import Footer from "../../Components/footer"
+import JSONViewer from "./JSONViewer"
+import DIFFKeysCardViewer from "./DIFFKeysCardViewer"
+import FileSelector from "./FileSelector"
+import MetaData from "./MetaData"
+
+const inititalState = {
+  fileOne: {
+    name: "",
+    file: null,
+    show: false,
+    content: null,
+  },
+  fileTwo: {
+    name: "",
+    file: null,
+    show: false,
+    content: null,
+  },
+}
 
 function JSONDiffChecker() {
-  const fileOne = useRef(null)
-  const fileTwo = useRef(null)
-  const [selectedFile, setSelectedFile] = useState({
-    fileOne: null,
-    fileTwo: null,
+  const [selectedFiles, setSelectedFile] = useState({ ...inititalState })
+  const [showToast, setShowToast] = useState({
+    show: false,
+    message: "",
   })
 
-  const { compareContent, missingKeys } = useDiff(selectedFile.fileOne, selectedFile.fileTwo)
-
-  const [fileContent, setFileContent] = useState({
-    fileOne: null,
-    showOne: false,
-    fileTwo: null,
-    showTwo: false,
-  })
-  React.useEffect(() => {
-    addEventListener(fileOne)
-    addEventListener(fileTwo)
-
-    return () => {
-      removeEventListener(fileOne)
-      removeEventListener(fileTwo)
-    }
-  }, [])
-
-  const addEventListener = (dropBox) => {
-    dropBox?.current?.addEventListener("dragenter", (e) => handleDragEnter(e, dropBox))
-    dropBox?.current?.addEventListener("dragleave", (e) => handleDragLeave(e, dropBox))
-  }
-
-  const removeEventListener = (dropBox) => {
-    dropBox?.current?.removeEventListener("dragenter", handleDragEnter)
-    dropBox?.current?.removeEventListener("dragleave", handleDragLeave)
-  }
-
-  const handleDragEnter = (e, dropBoxRef) => {
-    e.preventDefault()
-    e.stopPropagation()
-    dropBoxRef.current.style.backgroundColor = "#e7e7e7"
-  }
-
-  const handleDragLeave = (e, dropBoxRef) => {
-    e.preventDefault()
-    e.stopPropagation()
-    dropBoxRef.current.style.backgroundColor = "white"
-  }
+  const { compareContent, missingKeys, clearComparison, metaData } = useDiff()
 
   const handleFileChange = (e) => {
-    const name = e.target.name
-    const file = e.target.files[0]
-    setSelectedFile({
-      ...selectedFile,
-      [name]: file,
-    })
-    const reader = new FileReader()
-    reader.readAsText(file, "UTF-8")
-    reader.onload = (e) => {
-      // console.log(e.target.result)
-      setFileContent({
-        ...fileContent,
-        [name]: e.target.result,
-      })
+    try {
+      const {
+        name,
+        files: [file],
+      } = e.target
+      console.log(file)
+      if (file.type !== "application/json") {
+        setShowToast({ show: true, message: "Please select a json file" })
+        return
+      }
+      const reader = new FileReader()
+      reader.readAsText(file, "UTF-8")
+      reader.onload = (e) => {
+        try {
+          console.log(typeof e.target.result, JSON.parse(e.target.result))
+          setSelectedFile({
+            ...selectedFiles,
+            [name]: {
+              ...selectedFiles[name],
+              file,
+              name: file?.name,
+              content: JSON.parse(e.target.result),
+              show: true,
+            },
+          })
+        } catch (error) {
+          setShowToast({ show: true, message: "Not a Valid JSON File" })
+        }
+      }
+    } catch (error) {
+      setShowToast({ show: true, message: "Something went south. Please try again" })
     }
   }
 
   const onCompare = () => {
     console.log("compare")
-    compareContent(fileContent.fileOne, fileContent.fileTwo)
+    if (!selectedFiles.fileOne.file || !selectedFiles.fileTwo.file) {
+      setShowToast({ show: true, message: "Please select two files to compare" })
+      return
+    }
+    const { totalCount } = compareContent(selectedFiles)
+    setShowToast({
+      show: true,
+      message: `Total keys missmatched: ${totalCount}`,
+    })
   }
+
+  useEffect(() => {
+    if (showToast) {
+      setTimeout(() => {
+        setShowToast(false)
+      }, 3000)
+    }
+  }, [showToast])
 
   const clearFile = (e) => {
     e.stopPropagation()
     const name = e.target.getAttribute("name")
     console.log(name)
     setSelectedFile({
-      ...selectedFile,
-      [name]: null,
-    })
-    setFileContent({
-      ...fileContent,
-      [name]: null,
+      ...selectedFiles,
+      [name]: {
+        name: "",
+        file: null,
+        show: false,
+        content: null,
+      },
     })
   }
 
+  const clearAll = () => {
+    setSelectedFile({ ...inititalState })
+    clearComparison()
+  }
+
+  const copyDiffAsText = () => {
+    let text = ""
+    text += `Total keys missmatched: ${missingKeys.totalCount}\n\n`
+    text += `Extra Keys in file "${selectedFiles.fileOne.name}": ${missingKeys.compOne.length}\n`
+    text += missingKeys.compOne.join("\n")
+    text += "\n\n-------------------------------------------------- \n\n"
+    text += `Extra Keys in file "${selectedFiles.fileTwo.name}": ${missingKeys.compTwo.length}\n`
+    text += missingKeys.compTwo.join("\n")
+    navigator.clipboard.writeText(text)
+    setShowToast({ show: true, message: "Copied to clipboard" })
+    console.log(text)
+  }
+
   return (
-    <Container>
-      <Header>
-        <h1>JSON Diff Checker</h1>
-        <p>This is a JSON Diff Checker. It takes two JSON objects and compares</p>
-      </Header>
-      <Body>
-        <Row colCount={2 + Number(missingKeys.totalCount > 0)}>
-          <Col>
-            {!selectedFile.fileOne ? (
-              <FileSelector
-                accept="application/JSON"
-                name="fileOne"
-                onChange={handleFileChange}
-                ref={fileOne}
-                type="file"
-              />
-            ) : (
-              <FileNamePreview>
-                {selectedFile.fileOne.name}
-                <span onClick={clearFile} name="fileOne">
-                  X
-                </span>
-              </FileNamePreview>
-            )}
-            <FileContentPreview show={fileContent.showOne}>
-              <p
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setFileContent({
-                    ...fileContent,
-                    showOne: !fileContent.showOne && fileContent.fileOne,
-                  })
-                }}
-              >
-                &#709;
-              </p>
-              <PrettyPrintJson data={fileContent.fileOne} />
-            </FileContentPreview>
-          </Col>
-          <Col>
-            {!selectedFile.fileTwo ? (
-              <FileSelector
-                accept="application/JSON"
-                name="fileTwo"
-                onChange={handleFileChange}
-                ref={fileTwo}
-                type="file"
-              />
-            ) : (
-              <FileNamePreview>
-                {selectedFile.fileTwo.name}{" "}
-                <span onClick={clearFile} name="fileTwo">
-                  X
-                </span>
-              </FileNamePreview>
-            )}
-            <FileContentPreview show={fileContent.showTwo}>
-              <p
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setFileContent({
-                    ...fileContent,
-                    showTwo: !fileContent.showTwo && fileContent.fileTwo,
-                  })
-                }}
-              >
-                &#709;
-              </p>
-              <PrettyPrintJson data={fileContent.fileTwo} />
-            </FileContentPreview>
-          </Col>
-          {missingKeys.totalCount > 0 && (
-            <Col>
-              <span>
-                Total <Code>{missingKeys.totalCount}</Code> keys difference
-              </span>
-              {missingKeys.compOne.map((key) => (
-                <KeyWrapperCard key={key} keyName={key} file={selectedFile?.fileOne?.name} />
-              ))}
-              {missingKeys.compTwo.map((key) => (
-                <KeyWrapperCard key={key} keyName={key} file={selectedFile?.fileTwo?.name} />
-              ))}
-            </Col>
-          )}
-        </Row>
-        <Row colCount={2}>
-          <Col>
-            <Button>Clear</Button>
-          </Col>
-          <Col>
-            <Button onClick={onCompare}>Compare</Button>
-          </Col>
-        </Row>
-      </Body>
-    </Container>
+    <>
+      <Container>
+        <Header>
+          <h1>JSON Diff Checker</h1>
+          <p>This is a JSON Diff Checker. It takes two JSON files and compares</p>
+        </Header>
+        <Body>
+          <FileContentContainer>
+            <FooterButtons>
+              <Button onClick={clearAll}>Clear</Button>
+              <Button onClick={onCompare}>Compare</Button>
+            </FooterButtons>
+            <div className="main">
+              <div className="fileViewColumn">
+                <FileSelector
+                  name="fileOne"
+                  file={selectedFiles.fileOne.file}
+                  onChange={handleFileChange}
+                  onClearClick={clearFile}
+                />
+                <JSONViewer content={selectedFiles.fileOne?.content} />
+              </div>
+              <div className="fileViewColumn">
+                <FileSelector
+                  name="fileTwo"
+                  file={selectedFiles.fileTwo.file}
+                  onChange={handleFileChange}
+                  onClearClick={clearFile}
+                />
+                <JSONViewer content={selectedFiles.fileTwo?.content} />
+              </div>
+            </div>
+          </FileContentContainer>
+          <RightSideBar>
+            <MetaData metaData={metaData} missingKeys={missingKeys} selectedFiles={selectedFiles} />
+            <Button onClick={copyDiffAsText}>Copy Diff as text</Button>
+            <DIFFKeysCardViewer selectedFiles={selectedFiles} missingKeys={missingKeys} />
+          </RightSideBar>
+        </Body>
+      </Container>
+      <Toast showToast={showToast.show} message={showToast.message} />
+      <Footer />
+    </>
   )
 }
 
 export default JSONDiffChecker
 
-const PrettyPrintJson = React.memo(({ data }) => (
-  <pre>{typeof data === "string" ? data : JSON.stringify(data, null, 2)}</pre>
-))
-
-const KeyWrapperCard = ({ keyName, file }) => (
-  <KeyWrapper>
-    Extra key <Code>{keyName.replace(".", " > ")}</Code> in File <Code>{file}</Code>
-  </KeyWrapper>
+const Toast = ({ message, showToast }) => (
+  <ToastWrapper showToast={showToast}>
+    <p>{message}</p>
+  </ToastWrapper>
 )
