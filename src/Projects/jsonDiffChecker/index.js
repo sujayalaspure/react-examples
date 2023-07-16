@@ -38,7 +38,7 @@ function JSONDiffChecker() {
     message: "",
   })
 
-  const { compareContent, missingKeys, clearComparison, metaData } = useDiff()
+  const { compareContent, missingKeys, clearComparison, metaData, isLoading } = useDiff()
 
   const handleFileChange = (e) => {
     try {
@@ -49,6 +49,10 @@ function JSONDiffChecker() {
       console.log(file)
       if (file.type !== "application/json") {
         setShowToast({ show: true, message: "Please select a json file" })
+        return
+      }
+      if (file.size > 1500000) {
+        setShowToast({ show: true, message: "Please select a file less than 1.5MB" })
         return
       }
       const reader = new FileReader()
@@ -81,7 +85,12 @@ function JSONDiffChecker() {
       setShowToast({ show: true, message: "Please select two files to compare" })
       return
     }
-    const { totalCount } = compareContent(selectedFiles)
+    const { totalCount, error } = compareContent(selectedFiles)
+    if (error) {
+      setShowToast({ show: true, message: error })
+      return
+    }
+
     setShowToast({
       show: true,
       message: `Total keys missmatched: ${totalCount}`,
@@ -89,10 +98,14 @@ function JSONDiffChecker() {
   }
 
   useEffect(() => {
+    let timeout
     if (showToast) {
-      setTimeout(() => {
+      timeout = setTimeout(() => {
         setShowToast(false)
       }, 3000)
+    }
+    return () => {
+      clearTimeout(timeout)
     }
   }, [showToast])
 
@@ -140,7 +153,7 @@ function JSONDiffChecker() {
           <FileContentContainer>
             <FooterButtons>
               <Button onClick={clearAll}>Clear</Button>
-              <Button onClick={onCompare}>Compare</Button>
+              <Button onClick={onCompare}>{isLoading ? "Comparing ..." : "Compare"}</Button>
             </FooterButtons>
             <div className="main">
               <div className="fileViewColumn">
@@ -164,9 +177,13 @@ function JSONDiffChecker() {
             </div>
           </FileContentContainer>
           <RightSideBar>
-            <MetaData metaData={metaData} missingKeys={missingKeys} selectedFiles={selectedFiles} />
-            <Button onClick={copyDiffAsText}>Copy Diff as text</Button>
-            <DIFFKeysCardViewer selectedFiles={selectedFiles} missingKeys={missingKeys} />
+            {missingKeys.totalCount > 0 && (
+              <MetaData metaData={metaData} missingKeys={missingKeys} selectedFiles={selectedFiles} />
+            )}
+            {missingKeys.totalCount > 0 && <Button onClick={copyDiffAsText}>Copy Diff as text</Button>}
+            {missingKeys.totalCount > 0 && (
+              <DIFFKeysCardViewer selectedFiles={selectedFiles} missingKeys={missingKeys} />
+            )}
           </RightSideBar>
         </Body>
       </Container>

@@ -70,13 +70,42 @@ export const DIFFKeysCardsContainer = styled.div`
   height: 100%;
   border: 1px solid black;
   border-radius: 10px;
-  .keysDiff {
-    .fileTitle {
-      position: sticky;
-      top: 0;
-      background-color: whitesmoke;
-      padding: 10px;
+`
+
+export const FileKeysDiffContainer = styled.div`
+  .fileTitle {
+    position: sticky;
+    top: 0;
+    background-color: whitesmoke;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    .icon {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* background-color: #04aa6d33; */
+      aspect-ratio: 1/1;
+      font-size: 1.5rem;
+      height: 20px;
+      width: 20px;
     }
+  }
+  .loadMore {
+    display: block;
+    width: 100%;
+    border: none;
+    background-color: #04aa6d;
+    color: white;
+    padding: 8px 28px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+  }
+  .contentList {
+    display: ${(props) => (props.isVisible ? "block" : "none")};
+    transition: display 0.5s ease-in-out;
   }
 `
 
@@ -152,7 +181,7 @@ export const FileContentPreview = styled.div`
     border-radius: 6px;
   }
   pre {
-    display: inline-block;
+    /* display: inline-block; */
   }
 `
 
@@ -169,17 +198,14 @@ export const Button = styled.button`
   }
 `
 
-export const KeyWrapper = styled.div`
+export const KeyWrapper = styled.li`
+  list-style: none;
   background-color: white;
-  border-radius: 5px;
-  /* border: 1px solid black; */
-  border-color: gray;
-  border-bottom-width: 1px;
-  border-top-width: 1px;
   padding: 10px;
   word-wrap: break-word;
   margin: 8px 0;
-  width: min(100%, 400px);
+  border-bottom: 0.5px solid gray;
+  margin: 0 10px;
 `
 
 export const Code = styled.code`
