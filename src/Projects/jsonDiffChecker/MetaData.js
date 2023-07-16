@@ -4,7 +4,7 @@ import { Code, MetaDataContainer } from "./style"
 function MetaData({ selectedFiles, missingKeys, metaData }) {
   return (
     <MetaDataContainer>
-      Files to Compared:
+      Files to Compare:
       <br /> 1. <Code>{selectedFiles.fileOne.name?.trunc(40)}</Code> ({metaData.fileOne.size})
       <br /> 2. <Code>{selectedFiles.fileTwo.name?.trunc(40)}</Code> ({metaData.fileTwo.size})
       {metaData.timeTakenToCompare > 0 && (

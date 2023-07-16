@@ -1,30 +1,47 @@
-import React from "react"
-import { Code, DIFFKeysCardsContainer, KeyWrapper } from "./style"
+import React, { useState } from "react"
+import { Code, DIFFKeysCardsContainer, FileKeysDiffContainer, KeyWrapper } from "./style"
 
 function DIFFKeysCardViewer({ selectedFiles, missingKeys }) {
   return (
     <DIFFKeysCardsContainer>
-      <div className="keysDiff">
-        <div className="fileTitle">{selectedFiles?.fileOne?.name}</div>
-        {missingKeys.compOne.map((key) => (
-          <KeyWrapperCard key={key} keyName={key} file={selectedFiles?.fileOne?.name?.trunc(30)} />
-        ))}
-      </div>
-      <div className="keysDiff">
-        <div className="fileTitle">{selectedFiles?.fileTwo?.name}</div>
-
-        {missingKeys.compTwo.map((key) => (
-          <KeyWrapperCard key={key} keyName={key} file={selectedFiles?.fileTwo?.name?.trunc(30)} />
-        ))}
-      </div>
+      <FileKeysDiff fileName={selectedFiles?.fileOne?.name} missingKeys={missingKeys.compOne} />
+      <FileKeysDiff fileName={selectedFiles?.fileTwo?.name} missingKeys={missingKeys.compTwo} />
     </DIFFKeysCardsContainer>
   )
 }
 
 export default DIFFKeysCardViewer
 
-const KeyWrapperCard = ({ keyName, file }) => (
-  <KeyWrapper>
-    Extra key <Code>{keyName.replace(".", " > ")}</Code> in File <Code>{file}</Code>
-  </KeyWrapper>
-)
+const FileKeysDiff = ({ fileName, missingKeys }) => {
+  const [renderLen, setRenderLen] = useState(1000)
+  const [isVisible, setIsVisible] = useState(true)
+
+  return (
+    <FileKeysDiffContainer className="keysDiff" isVisible={isVisible}>
+      <div className="fileTitle">
+        {fileName} ({Math.min(renderLen, missingKeys.length)}/{missingKeys.length})
+        <span
+          onClick={(e) => {
+            e.stopPropagation()
+            setIsVisible((prev) => !prev)
+          }}
+          className="icon"
+        >
+          &#7028;
+        </span>
+      </div>
+      <div className="contentList">
+        {missingKeys.slice(0, renderLen).map((keyName, i) => (
+          <KeyWrapper key={keyName + i}>
+            Extra key <Code>{keyName.replace(".", " > ")}</Code> in File <Code>{fileName.trunc(30)}</Code>
+          </KeyWrapper>
+        ))}
+        {missingKeys.length > renderLen && (
+          <button className="loadMore" onClick={() => setRenderLen((prev) => prev + 1000)}>
+            LoadMore
+          </button>
+        )}
+      </div>
+    </FileKeysDiffContainer>
+  )
+}

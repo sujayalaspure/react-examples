@@ -1,6 +1,7 @@
 import { useState } from "react"
 
 function useDiff() {
+  const [isLoading, setIsLoading] = useState(false)
   const [missingKeys, setMissingKeys] = useState({
     compOne: [],
     compTwo: [],
@@ -21,43 +22,57 @@ function useDiff() {
   })
 
   const compareContent = (files) => {
+    setIsLoading(true)
     const { fileOne, fileTwo } = files
     console.log("compareContent")
+    try {
+      const t1 = new Date().getTime()
+      const arr1 = flattenObject(fileOne.content)
+      const arr2 = flattenObject(fileTwo.content)
 
-    const t1 = performance.now()
-    const arr1 = flattenObject(fileOne.content)
-    const arr2 = flattenObject(fileTwo.content)
-
-    const arrSet1 = new Set(arr1)
-    const arrSet2 = new Set(arr2)
-    const comp1 = arr1.filter((item) => !arrSet2.has(item))
-    const comp2 = arr2.filter((item) => !arrSet1.has(item))
-    const t2 = performance.now()
-    console.log(`compare completed in ${t2 - t1} milliseconds`)
-    setMissingKeys({
-      compOne: comp1,
-      compTwo: comp2,
-      totalCount: comp1.length + comp2.length,
-      timeTaken: t2 - t1,
-    })
-    setMetaData({
-      fileOne: {
-        name: fileOne.name,
-        size: bytesToSize(fileOne.file.size),
-      },
-      fileTwo: {
-        name: fileTwo.name,
-        size: bytesToSize(fileTwo.file.size),
-      },
-      t1,
-      t2,
-      timeTakenToCompare: t2 - t1,
-    })
+      const arrSet1 = new Set(arr1)
+      const arrSet2 = new Set(arr2)
+      const comp1 = arr1.filter((item) => !arrSet2.has(item))
+      const comp2 = arr2.filter((item) => !arrSet1.has(item))
+      const t2 = new Date().getTime()
+      console.log(`compare completed in ${t2 - t1} milliseconds`)
+      setMissingKeys({
+        compOne: comp1,
+        compTwo: comp2,
+        totalCount: comp1.length + comp2.length,
+        timeTaken: t2 - t1,
+      })
+      setMetaData({
+        fileOne: {
+          name: fileOne.name,
+          size: bytesToSize(fileOne.file.size),
+        },
+        fileTwo: {
+          name: fileTwo.name,
+          size: bytesToSize(fileTwo.file.size),
+        },
+        t1,
+        t2,
+        timeTakenToCompare: t2 - t1,
+      })
+      setIsLoading(false)
+      return {
+        compOne: comp1,
+        compTwo: comp2,
+        totalCount: comp1.length + comp2.length,
+        timeTaken: t2 - t1,
+        error: null,
+      }
+    } catch (error) {
+      setIsLoading(false)
+      console.log(error)
+    }
     return {
-      compOne: comp1,
-      compTwo: comp2,
-      totalCount: comp1.length + comp2.length,
-      timeTaken: t2 - t1,
+      compOne: [],
+      compTwo: [],
+      totalCount: 0,
+      timeTaken: 0,
+      error: "Something went wrong",
     }
   }
 
@@ -105,6 +120,7 @@ function useDiff() {
       },
       timeTakenToCompare: 0,
     })
+    setIsLoading(false)
   }
 
   return {
@@ -113,6 +129,7 @@ function useDiff() {
     missingKeys,
     clearComparison,
     metaData,
+    isLoading,
   }
 }
 
