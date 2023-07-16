@@ -8,6 +8,8 @@ import { Link, Outlet, useSearchParams } from "react-router-dom"
 function ImageCarausal() {
   const [selectedImage, setSetselectedImage] = useState(0)
   let containerRef = useRef(null)
+  const [password, setPassword] = useState(null)
+
   const { width } = useWindowDimensions()
   const { data, isLoading, getDocuments, queryDocuments, error } = useCollection(process.env.REACT_APP_BUCKET_ID)
   let [searchParams] = useSearchParams()
@@ -29,6 +31,18 @@ function ImageCarausal() {
       behavior: "smooth",
     })
   }
+
+  useEffect(() => {
+    const password = prompt("Enter Password")
+    setPassword(password)
+  }, [])
+  if (password !== process.env.REACT_APP_password)
+    return (
+      <form>
+        Enter password to View :
+        <input type="password" onChange={(e) => setPassword(e.target.value)} />
+      </form>
+    )
 
   return (
     <>

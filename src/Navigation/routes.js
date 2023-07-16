@@ -14,6 +14,7 @@ const MapOfIndia = React.lazy(() => import("../Projects/mapofindia"))
 const DependantSearch = React.lazy(() => import("../Projects/DependantSearch"))
 const ImageCarausal = React.lazy(() => import("../Projects/ImageCarausal"))
 const UploadImage = React.lazy(() => import("../Projects/ImageCarausal/UploadImage"))
+const JSONDiffChecker = React.lazy(() => import("../Projects/jsonDiffChecker"))
 
 export const getComponents = {
   home: <Home />,
@@ -30,6 +31,7 @@ export const getComponents = {
   dependantsearch: <DependantSearch />,
   imagecarausal: <ImageCarausal />,
   uploadimage: <UploadImage />,
+  jsondiffchecker: <JSONDiffChecker />,
 }
 
 export const paths = [
@@ -49,7 +51,7 @@ export const paths = [
     path: "/parking",
     Label: "Parking System",
     element: getComponents["parking"],
-    showHome: true,
+    showHome: false,
   },
   {
     path: "/weather",
@@ -73,13 +75,13 @@ export const paths = [
     path: "/holidays",
     Label: "Current Year Holidays",
     element: getComponents["holidays"],
-    showHome: true,
+    showHome: false,
   },
   {
     path: "/typeahead",
     Label: "Typeahead",
     element: getComponents["typeahead"],
-    showHome: false,
+    showHome: true,
   },
   {
     path: "/mapofindia",
@@ -103,12 +105,18 @@ export const paths = [
     path: "/imagecarausal",
     Label: "Image Carausal",
     element: getComponents["imagecarausal"],
-    showHome: false,
+    showHome: true,
   },
   {
     path: "/imagecarausal/uploadimage",
     Label: "Upload Image",
     element: getComponents["uploadimage"],
     showHome: false,
+  },
+  {
+    path: "/jsondiffchecker",
+    Label: "JSON Diff Checker",
+    element: getComponents["jsondiffchecker"],
+    showHome: true,
   },
 ]
