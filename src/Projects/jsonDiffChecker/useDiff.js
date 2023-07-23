@@ -13,10 +13,12 @@ function useDiff() {
     fileOne: {
       name: "",
       size: 0,
+      flattenObject: [],
     },
     fileTwo: {
       name: "",
       size: 0,
+      flattenObject: [],
     },
     timeTakenToCompare: 0,
   })
@@ -27,13 +29,15 @@ function useDiff() {
     console.log("compareContent")
     try {
       const t1 = new Date().getTime()
-      const arr1 = flattenObject(fileOne.content)
-      const arr2 = flattenObject(fileTwo.content)
+      const arr1 = flattenObject1(fileOne.content, 0)
+      const arr2 = flattenObject1(fileTwo.content, 0)
 
-      const arrSet1 = new Set(arr1)
-      const arrSet2 = new Set(arr2)
-      const comp1 = arr1.filter((item) => !arrSet2.has(item))
-      const comp2 = arr2.filter((item) => !arrSet1.has(item))
+      const arrSet1 = new Set(arr1.map((item) => item.keyValue))
+      const arrSet2 = new Set(arr2.map((item) => item.keyValue))
+
+      const comp1 = arr1.filter((item) => !arrSet2.has(item.keyValue)) // O(n)
+      const comp2 = arr2.filter((item) => !arrSet1.has(item.keyValue)) // O(n)
+
       const t2 = new Date().getTime()
       console.log(`compare completed in ${t2 - t1} milliseconds`)
       setMissingKeys({
@@ -46,10 +50,12 @@ function useDiff() {
         fileOne: {
           name: fileOne.name,
           size: bytesToSize(fileOne.file.size),
+          flattenObject: arr1,
         },
         fileTwo: {
           name: fileTwo.name,
           size: bytesToSize(fileTwo.file.size),
+          flattenObject: arr2,
         },
         t1,
         t2,
@@ -83,24 +89,46 @@ function useDiff() {
     return Math.round(bytes / Math.pow(1024, i), 2) + " " + sizes[i]
   }
 
-  const flattenObject = (obj) => {
+  const flattenObject1 = (obj, level) => {
     let arr = []
     if (typeof obj === "object") {
       Object.keys(obj).forEach((key) => {
         if (typeof obj[key] === "object" && obj[key] !== null) {
-          arr.push(key)
-          arr.push(...flattenObject(obj[key]).map((subKey) => `${key}.${subKey}`))
+          arr.push({ keyValue: key, level, type: Array.isArray(obj[key]) ? "array" : typeof obj[key] })
+          arr.push(
+            ...flattenObject1(obj[key], level + 1).map((subKey) => ({
+              ...subKey,
+              keyValue: `${key}.${subKey.keyValue}`,
+            }))
+          )
         } else {
-          arr.push(key)
+          arr.push({ keyValue: key, level, type: typeof obj[key], value: obj[key] })
         }
       })
     }
     return arr
   }
+
   // eslint-disable-next-line no-extend-native
   String.prototype.trunc = function (n) {
     if (this.length < n) return this
     return this.slice(0, n / 2 - 1) + (this.length > n ? "..." : "") + this.slice(this.length - n / 2 + 1, this.length)
+  }
+
+  const clearFileData = (name) => {
+    console.log(name)
+    setMissingKeys({
+      ...missingKeys,
+      [name]: [],
+    })
+    setMetaData({
+      ...metaData,
+      [name]: {
+        name: "",
+        size: 0,
+        flattenObject: [],
+      },
+    })
   }
 
   const clearComparison = () => {
@@ -130,6 +158,7 @@ function useDiff() {
     clearComparison,
     metaData,
     isLoading,
+    clearFileData,
   }
 }
 

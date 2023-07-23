@@ -1,7 +1,7 @@
 import React, { useRef } from "react"
-import { FileNamePreview, FileSelectorInput } from "./style"
+import { FileSelectorInput } from "./style"
 
-function FileSelector({ name, file, onChange, onClearClick }) {
+function FileSelector({ name, file, onChange }) {
   const fileRef = useRef(null)
 
   React.useEffect(() => {
@@ -27,18 +27,18 @@ function FileSelector({ name, file, onChange, onClearClick }) {
     fileRef.current.style.backgroundColor = "white"
   }
 
+  // <FileNamePreview>
+  //   {file?.name}
+  //   <div onClick={onClearClick} name={name}>
+  //     X
+  //   </div>
+  // </FileNamePreview>
+
   return (
     <>
       {!file ? (
         <FileSelectorInput accept="application/JSON" name={name} onChange={onChange} ref={fileRef} type="file" />
-      ) : (
-        <FileNamePreview>
-          {file?.name}
-          <div onClick={onClearClick} name={name}>
-            X
-          </div>
-        </FileNamePreview>
-      )}
+      ) : null}
     </>
   )
 }

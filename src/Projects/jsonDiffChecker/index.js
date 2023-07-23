@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import {
   Body,
   Button,
@@ -11,7 +11,7 @@ import {
 } from "./style"
 import useDiff from "./useDiff"
 import Footer from "../../Components/footer"
-import JSONViewer from "./JSONViewer"
+import FilePreview from "./FilePreview"
 import DIFFKeysCardViewer from "./DIFFKeysCardViewer"
 import FileSelector from "./FileSelector"
 import MetaData from "./MetaData"
@@ -37,8 +37,9 @@ function JSONDiffChecker() {
     show: false,
     message: "",
   })
-
-  const { compareContent, missingKeys, clearComparison, metaData, isLoading } = useDiff()
+  const fileOnePreviewRef = useRef(null)
+  const fileTwoPreviewRef = useRef(null)
+  const { compareContent, missingKeys, clearComparison, metaData, isLoading, clearFileData } = useDiff()
 
   const handleFileChange = (e) => {
     try {
@@ -113,6 +114,7 @@ function JSONDiffChecker() {
     e.stopPropagation()
     const name = e.target.getAttribute("name")
     console.log(name)
+    clearFileData(name)
     setSelectedFile({
       ...selectedFiles,
       [name]: {
@@ -133,13 +135,22 @@ function JSONDiffChecker() {
     let text = ""
     text += `Total keys missmatched: ${missingKeys.totalCount}\n\n`
     text += `Extra Keys in file "${selectedFiles.fileOne.name}": ${missingKeys.compOne.length}\n`
-    text += missingKeys.compOne.join("\n")
+    text += missingKeys.compOne.map((item) => item.keyValue).join("\n")
     text += "\n\n-------------------------------------------------- \n\n"
     text += `Extra Keys in file "${selectedFiles.fileTwo.name}": ${missingKeys.compTwo.length}\n`
-    text += missingKeys.compTwo.join("\n")
+    text += missingKeys.compTwo.map((item) => item.keyValue).join("\n")
     navigator.clipboard.writeText(text)
     setShowToast({ show: true, message: "Copied to clipboard" })
     console.log(text)
+  }
+
+  const onKeyRowClick = (item) => {
+    if (item.fileName === selectedFiles.fileOne.name) {
+      fileOnePreviewRef.current.scrollToVisible(item.keyValue)
+    }
+    if (item.fileName === selectedFiles.fileTwo.name) {
+      fileTwoPreviewRef.current.scrollToVisible(item.keyValue)
+    }
   }
 
   return (
@@ -157,22 +168,30 @@ function JSONDiffChecker() {
             </FooterButtons>
             <div className="main">
               <div className="fileViewColumn">
-                <FileSelector
-                  name="fileOne"
-                  file={selectedFiles.fileOne.file}
-                  onChange={handleFileChange}
-                  onClearClick={clearFile}
-                />
-                <JSONViewer content={selectedFiles.fileOne?.content} />
+                <FileSelector name="fileOne" file={selectedFiles.fileOne.file} onChange={handleFileChange} />
+                {selectedFiles.fileOne.file && (
+                  <FilePreview
+                    name="fileOne"
+                    onClearClick={clearFile}
+                    ref={fileOnePreviewRef}
+                    flattenObject={metaData.fileOne.flattenObject}
+                    file={selectedFiles.fileOne}
+                    missingKeys={missingKeys.compOne}
+                  />
+                )}
               </div>
               <div className="fileViewColumn">
-                <FileSelector
-                  name="fileTwo"
-                  file={selectedFiles.fileTwo.file}
-                  onChange={handleFileChange}
-                  onClearClick={clearFile}
-                />
-                <JSONViewer content={selectedFiles.fileTwo?.content} />
+                <FileSelector name="fileTwo" file={selectedFiles.fileTwo.file} onChange={handleFileChange} />
+                {selectedFiles.fileTwo.file && (
+                  <FilePreview
+                    name="fileTwo"
+                    onClearClick={clearFile}
+                    ref={fileTwoPreviewRef}
+                    flattenObject={metaData.fileTwo.flattenObject}
+                    file={selectedFiles.fileTwo}
+                    missingKeys={missingKeys.compTwo}
+                  />
+                )}
               </div>
             </div>
           </FileContentContainer>
@@ -182,7 +201,7 @@ function JSONDiffChecker() {
             )}
             {missingKeys.totalCount > 0 && <Button onClick={copyDiffAsText}>Copy Diff as text</Button>}
             {missingKeys.totalCount > 0 && (
-              <DIFFKeysCardViewer selectedFiles={selectedFiles} missingKeys={missingKeys} />
+              <DIFFKeysCardViewer onRowClick={onKeyRowClick} selectedFiles={selectedFiles} missingKeys={missingKeys} />
             )}
           </RightSideBar>
         </Body>
@@ -200,3 +219,26 @@ const Toast = ({ message, showToast }) => (
     <p>{message}</p>
   </ToastWrapper>
 )
+
+/**
+ * BUGS:
+ * - closing bracket not rendering correctly. if having empty object.
+ * - last remaining closing bracket not rendering correctly
+ * - check for null and undefined values
+ * - last line number not updating correctly
+ * - render empty array/ object on the same line.
+ *
+ * Features:
+ * - compare two json files
+ * - show diff in file preview
+ * - show extra keys
+ * - click on the key to scroll to the key in the file
+ * - copy diff as text
+ * - show meta data
+ * - show time taken to compare
+ *
+ * Features to add:
+ * - Update the diff algorithm
+ * -
+ *
+ */
