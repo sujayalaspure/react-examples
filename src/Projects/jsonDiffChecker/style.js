@@ -4,6 +4,7 @@ import { theme } from "./theme"
 export const Container = styled.div`
   height: 100vh;
   padding: 0 20px;
+  transition: all 0.5s ease-in-out;
 `
 export const Header = styled.div`
   display: flex;
@@ -53,7 +54,7 @@ export const FileContentContainer = styled.div`
 `
 
 export const RightSideBar = styled.div`
-  flex: 0 1 max(28%, 300px);
+  /* flex: 0 1 max(28%, 300px); */
   height: 85vh;
   overflow: hidden;
   display: flex;
@@ -62,6 +63,7 @@ export const RightSideBar = styled.div`
   transition: flex 0.5s ease-in-out;
   @media screen and (max-width: 1000px) {
     flex: 1 1 auto;
+    /* min-width: 50vw; */
     height: auto;
   }
 `
@@ -73,7 +75,7 @@ export const DIFFKeysCardsContainer = styled.div`
   overflow: scroll;
   height: 100%;
   border: 1px solid black;
-  border-radius: 10px;
+  border-radius: 5px;
 `
 
 export const FileKeysDiffContainer = styled.div`
@@ -121,18 +123,34 @@ export const FooterButtons = styled.div`
   margin-bottom: 20px;
 `
 
-export const FileSelectorInput = styled.input`
+export const FileSelectorInput = styled.div`
   background-color: ${theme.COLOR.white};
-  border-radius: 5px;
-  border: 1px solid black;
-  padding: 10px;
   overflow: scroll;
-  &::file-selector-button {
-    margin-right: 20px;
-    border: none;
-    padding: 10px 20px;
-    color: ${theme.COLOR.black};
+  display: flex;
+  align-items: center;
+  /* justify-content: space-between; */
+  gap: 6px;
+  input {
+    border-radius: 5px;
+    border: 1px solid black;
+    padding: ${(props) => (props.type === "file" ? "10px" : "20px")};
+    min-width: 330px;
+    &::file-selector-button {
+      margin-right: 20px;
+      border: none;
+      padding: 10px 20px;
+      color: ${theme.COLOR.black};
+      cursor: pointer;
+    }
+  }
+  .link-button {
+    border-radius: 5px;
+    border: 1px solid black;
     cursor: pointer;
+    padding: 16px;
+  }
+  span {
+    color: ${theme.COLOR.syntaxBlue};
   }
 `
 
@@ -248,7 +266,7 @@ export const ToastWrapper = styled.div`
 
 export const MetaDataContainer = styled.div`
   border: 1px solid black;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 10px;
   background-color: ${theme.COLOR.diffBackground};
   hr {

@@ -6,7 +6,6 @@ const DIFFViewer = forwardRef(({ missingKeysSet, jsonArray }, ref) => {
   let bracketArr = []
   let refObj = {}
   let lineNumber = 2
-  // console.log(jsonArray)
 
   useImperativeHandle(ref, () => ({
     scrollToVisible: (key) => {
@@ -48,7 +47,7 @@ const DIFFViewer = forwardRef(({ missingKeysSet, jsonArray }, ref) => {
           )
         })
     }
-    console.log(lastKey, bracketArr, item.level, nextItem.level, levelDown)
+    // console.log(lastKey, bracketArr, item.level, nextItem.level, levelDown)
 
     return (
       <>
@@ -118,7 +117,7 @@ const DIFFViewer = forwardRef(({ missingKeysSet, jsonArray }, ref) => {
   )
 })
 
-export default DIFFViewer
+export default React.memo(DIFFViewer)
 
 const Container = styled.div`
   width: max-content;
