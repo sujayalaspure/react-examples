@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import {
   Body,
   Button,
@@ -11,7 +11,7 @@ import {
 } from "./style"
 import useDiff from "./useDiff"
 import Footer from "../../Components/footer"
-import JSONViewer from "./JSONViewer"
+import FilePreview from "./FilePreview"
 import DIFFKeysCardViewer from "./DIFFKeysCardViewer"
 import FileSelector from "./FileSelector"
 import MetaData from "./MetaData"
@@ -37,45 +37,57 @@ function JSONDiffChecker() {
     show: false,
     message: "",
   })
+  const fileOnePreviewRef = useRef(null)
+  const fileTwoPreviewRef = useRef(null)
+  const { compareContent, missingKeys, clearComparison, metaData, isLoading, clearFileData } = useDiff()
 
-  const { compareContent, missingKeys, clearComparison, metaData, isLoading } = useDiff()
-
-  const handleFileChange = (e) => {
+  const handleFileChange = ({ fileNumber, fileData, inputFrom }) => {
     try {
-      const {
-        name,
-        files: [file],
-      } = e.target
-      console.log(file)
-      if (file.type !== "application/json") {
-        setShowToast({ show: true, message: "Please select a json file" })
-        return
-      }
-      if (file.size > 1500000) {
-        setShowToast({ show: true, message: "Please select a file less than 1.5MB" })
-        return
-      }
-      const reader = new FileReader()
-      reader.readAsText(file, "UTF-8")
-      reader.onload = (e) => {
-        try {
-          console.log(typeof e.target.result, JSON.parse(e.target.result))
-          setSelectedFile({
-            ...selectedFiles,
-            [name]: {
-              ...selectedFiles[name],
-              file,
-              name: file?.name,
-              content: JSON.parse(e.target.result),
-              show: true,
-            },
-          })
-        } catch (error) {
-          setShowToast({ show: true, message: "Not a Valid JSON File" })
+      if (inputFrom === "file") {
+        // console.log("handleFileChange", fileData)
+        if (fileData.type !== "application/json") {
+          setShowToast({ show: true, message: "Please select a json file" })
+          return
         }
+        if (fileData.size > 1500000) {
+          setShowToast({ show: true, message: "Please select a file less than 1.5MB" })
+          return
+        }
+        const reader = new FileReader()
+        reader.readAsText(fileData, "UTF-8")
+        reader.onload = (e) => {
+          try {
+            console.log(typeof e.target.result, JSON.parse(e.target.result))
+            setSelectedFile({
+              ...selectedFiles,
+              [fileNumber]: {
+                ...selectedFiles[fileNumber],
+                file: fileData,
+                name: fileData?.name,
+                content: JSON.parse(e.target.result),
+                show: true,
+              },
+            })
+          } catch (error) {
+            setShowToast({ show: true, message: "Not a Valid JSON File" })
+          }
+        }
+      } else if (inputFrom === "link") {
+        // console.log("handleFileChange", fileData)
+        setSelectedFile({
+          ...selectedFiles,
+          [fileNumber]: {
+            ...selectedFiles[fileNumber],
+            file: fileData,
+            name: fileData?.name,
+            content: JSON.parse(fileData?.data),
+            show: true,
+          },
+        })
       }
     } catch (error) {
-      setShowToast({ show: true, message: "Something went south. Please try again" })
+      console.log(error)
+      setShowToast({ show: true, message: "😓 Something went south. Please try again" })
     }
   }
 
@@ -113,6 +125,7 @@ function JSONDiffChecker() {
     e.stopPropagation()
     const name = e.target.getAttribute("name")
     console.log(name)
+    clearFileData(name)
     setSelectedFile({
       ...selectedFiles,
       [name]: {
@@ -133,13 +146,22 @@ function JSONDiffChecker() {
     let text = ""
     text += `Total keys missmatched: ${missingKeys.totalCount}\n\n`
     text += `Extra Keys in file "${selectedFiles.fileOne.name}": ${missingKeys.compOne.length}\n`
-    text += missingKeys.compOne.join("\n")
+    text += missingKeys.compOne.map((item) => item.keyValue).join("\n")
     text += "\n\n-------------------------------------------------- \n\n"
     text += `Extra Keys in file "${selectedFiles.fileTwo.name}": ${missingKeys.compTwo.length}\n`
-    text += missingKeys.compTwo.join("\n")
+    text += missingKeys.compTwo.map((item) => item.keyValue).join("\n")
     navigator.clipboard.writeText(text)
     setShowToast({ show: true, message: "Copied to clipboard" })
     console.log(text)
+  }
+
+  const onKeyRowClick = (item) => {
+    if (item.fileName === selectedFiles.fileOne.name) {
+      fileOnePreviewRef.current.scrollToVisible(item.keyValue)
+    }
+    if (item.fileName === selectedFiles.fileTwo.name) {
+      fileTwoPreviewRef.current.scrollToVisible(item.keyValue)
+    }
   }
 
   return (
@@ -157,22 +179,30 @@ function JSONDiffChecker() {
             </FooterButtons>
             <div className="main">
               <div className="fileViewColumn">
-                <FileSelector
-                  name="fileOne"
-                  file={selectedFiles.fileOne.file}
-                  onChange={handleFileChange}
-                  onClearClick={clearFile}
-                />
-                <JSONViewer content={selectedFiles.fileOne?.content} />
+                <FileSelector fileNumber="fileOne" file={selectedFiles.fileOne.file} onChange={handleFileChange} />
+                {selectedFiles.fileOne.file && (
+                  <FilePreview
+                    name="fileOne"
+                    onClearClick={clearFile}
+                    ref={fileOnePreviewRef}
+                    flattenObject={metaData.fileOne.flattenObject}
+                    file={selectedFiles.fileOne}
+                    missingKeys={missingKeys.compOne}
+                  />
+                )}
               </div>
               <div className="fileViewColumn">
-                <FileSelector
-                  name="fileTwo"
-                  file={selectedFiles.fileTwo.file}
-                  onChange={handleFileChange}
-                  onClearClick={clearFile}
-                />
-                <JSONViewer content={selectedFiles.fileTwo?.content} />
+                <FileSelector fileNumber="fileTwo" file={selectedFiles.fileTwo.file} onChange={handleFileChange} />
+                {selectedFiles.fileTwo.file && (
+                  <FilePreview
+                    name="fileTwo"
+                    onClearClick={clearFile}
+                    ref={fileTwoPreviewRef}
+                    flattenObject={metaData.fileTwo.flattenObject}
+                    file={selectedFiles.fileTwo}
+                    missingKeys={missingKeys.compTwo}
+                  />
+                )}
               </div>
             </div>
           </FileContentContainer>
@@ -182,7 +212,7 @@ function JSONDiffChecker() {
             )}
             {missingKeys.totalCount > 0 && <Button onClick={copyDiffAsText}>Copy Diff as text</Button>}
             {missingKeys.totalCount > 0 && (
-              <DIFFKeysCardViewer selectedFiles={selectedFiles} missingKeys={missingKeys} />
+              <DIFFKeysCardViewer onRowClick={onKeyRowClick} selectedFiles={selectedFiles} missingKeys={missingKeys} />
             )}
           </RightSideBar>
         </Body>
@@ -200,3 +230,30 @@ const Toast = ({ message, showToast }) => (
     <p>{message}</p>
   </ToastWrapper>
 )
+
+/**
+ * BUGS:
+ * - [ ] closing bracket not rendering correctly. if having empty object.
+ * - [ ] not rendering if having consecutive nested objects
+ * - [ ] last remaining closing bracket not rendering correctly
+ * - [ ] check for null and undefined values
+ * - [ ] last line number not updating correctly
+ * - [ ] render empty array/ object on the same line.
+ * - [ ] from DiffView remove ref for every key. Only add to the extra keys.
+ * - [ ] rows in DiffView is re-rendering on hide/show operation
+ *
+ * Features:
+ * - [x] compare two json files
+ * - [x] Fetch data from json url
+ * - [x] show diff in file preview
+ * - [x] show extra keys
+ * - [x] click on the key to scroll to the key in the file
+ * - [x] copy diff as text
+ * - [x] show meta data
+ * - [x] show time taken to compare
+ * - [ ] Optimize the diff algorithm
+ * - [ ] diff preview add load more button
+ * - [ ] Scroll both the files simultaneously
+ * - [ ] Add file name change option while copying diff as text
+ *
+ */
