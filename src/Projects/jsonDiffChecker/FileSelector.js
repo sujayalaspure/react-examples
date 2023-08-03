@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react"
+import PropTypes from "prop-types"
 import { FileSelectorInput } from "./style"
 
 const fileIcon =
@@ -6,6 +7,12 @@ const fileIcon =
 
 const linkIcon =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAACY0lEQVR4nO2Zz2oUQRCHv9wiRvMKYvTgQ0STrHh0UQRfwVz2pLDog+iK4DOo8RLBJILgC+jGSw4KiaDrn4mbi+BIQS0MTc9M947b3QvzQcHs0N1bv5mu3qpaaGlpmQeuAo+BIXCsJtcDoMMccAHYA/Ia29WxSbIGjBxE5GoydpXEuAz89hCRq31P6c3Inj+xOPlM39JpNbl+bhm3Q6Ii/gJ3K+bct4jZIEERPYe5W8a8h0RivYGIyUMozv1ABC4BPxuIEM4Y838RmAXgbUMRwlljDXkwQblmCdT+FOt0jDXeE5inhgPb+pZ8eRk72D8aDlyfYo17lrcqh0dQxoUvfwcs6v0bwBHwFbhVMb+nMVUU8ZoIjAsilvXebeBPwTER4ypiBKwQgf0aEWJfHEWcaNoShc0aEfL5pqOIDglQJkLuT5DTrD/PIuQA6AKvLKdTEBEbWooOtU441pjY9BCxrDGUxxBxvqI8rQtsVxGjWQd2VXn6v0TszPqILavsfEUIdzQVl3I309xJ0o6Z/2KXidjWtGPRQ0RylV3fSADnUkTPGNd1iAnZTlFY8yhPPzsEdvAaAu0djTwqu0OH00mCOjh7HiImW+sTcKDXwinjiM1iNJRzw6r6TmV0jTWCb62BpQPoy4Ild3pCYPYNB6ZJFfopdAczwwHpw/pgqyfeEIHMcGKpoYgfwEUiMJxya9lEjGOWpwPDmRcNRETvmueGPajpOyUnYsKuRcyWOrekTeWOpQOYlAjhnPabck8bp9IoKLLq+WflN+AKibJSss1ySxtTavnkWQceab6UhS5PW1paaMw/bajY23D20soAAAAASUVORK5CYII="
+
+FileSelector.propTypes = {
+  fileNumber: PropTypes.string,
+  file: PropTypes.object,
+  onChange: PropTypes.func,
+}
 
 function FileSelector({ fileNumber, file, onChange }) {
   const fileRef = useRef(null)
@@ -91,7 +98,7 @@ function FileSelector({ fileNumber, file, onChange }) {
         })
         .then((data) => {
           // console.log(data)
-          onChange({ fileNumber, fileData: { data, name: fileName }, inputFrom: "link" })
+          onChange({ fileNumber, fileData: { data, name: fileName }, inputFrom: "link", url })
         })
         .catch((err) => console.log(err))
   }
@@ -110,7 +117,7 @@ function FileSelector({ fileNumber, file, onChange }) {
           />
           <span>or</span>
           <div className="link-button" onClick={onLinkClick}>
-            <img height={"25px"} width={"25px"} alt="link icon" src={inputType === "text" ? fileIcon : linkIcon} />
+            <img height={"23px"} alt="link icon" src={inputType === "text" ? fileIcon : linkIcon} />
           </div>
         </FileSelectorInput>
       ) : null}

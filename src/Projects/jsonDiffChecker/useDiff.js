@@ -28,17 +28,17 @@ function useDiff() {
     const { fileOne, fileTwo } = files
     console.log("compareContent")
     try {
-      const t1 = new Date().getTime()
+      const t1 = performance.now()
       const arr1 = flattenObject1(fileOne.content, 0)
       const arr2 = flattenObject1(fileTwo.content, 0)
 
       const arrSet1 = new Set(arr1.map((item) => item.keyValue))
       const arrSet2 = new Set(arr2.map((item) => item.keyValue))
 
-      const comp1 = arr1.filter((item) => !arrSet2.has(item.keyValue)) // O(n)
-      const comp2 = arr2.filter((item) => !arrSet1.has(item.keyValue)) // O(n)
+      const comp1 = arr1.filter((item) => !arrSet2.has(item.keyValue))
+      const comp2 = arr2.filter((item) => !arrSet1.has(item.keyValue))
 
-      const t2 = new Date().getTime()
+      const t2 = performance.now()
       console.log(`compare completed in ${t2 - t1} milliseconds`)
       setMissingKeys({
         compOne: comp1,
@@ -83,6 +83,7 @@ function useDiff() {
   }
 
   function bytesToSize(bytes) {
+    if (!bytes) return 0
     var sizes = ["Bytes", "KB", "MB", "GB", "TB"]
     if (bytes === 0) return "0 Byte"
     var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))

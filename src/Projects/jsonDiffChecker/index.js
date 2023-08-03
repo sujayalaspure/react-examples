@@ -1,20 +1,12 @@
-import React, { useEffect, useRef, useState } from "react"
-import {
-  Body,
-  Button,
-  Container,
-  FileContentContainer,
-  FooterButtons,
-  Header,
-  RightSideBar,
-  ToastWrapper,
-} from "./style"
+import { useRef, useState } from "react"
+import { Body, Button, Container, FileContentContainer, FooterButtons, Header, RightSideBar } from "./style"
 import useDiff from "./useDiff"
-import Footer from "../../Components/footer"
-import FilePreview from "./FilePreview"
-import DIFFKeysCardViewer from "./DIFFKeysCardViewer"
-import FileSelector from "./FileSelector"
 import MetaData from "./MetaData"
+import FilePreview from "./FilePreview"
+import Toast from "./Toast"
+import FileSelector from "./FileSelector"
+import DIFFKeysCardViewer from "./DIFFKeysCardViewer"
+import Footer from "../../Components/footer"
 
 const inititalState = {
   fileOne: {
@@ -33,24 +25,21 @@ const inititalState = {
 
 function JSONDiffChecker() {
   const [selectedFiles, setSelectedFile] = useState({ ...inititalState })
-  const [showToast, setShowToast] = useState({
-    show: false,
-    message: "",
-  })
+  const toastRef = useRef(null)
   const fileOnePreviewRef = useRef(null)
   const fileTwoPreviewRef = useRef(null)
   const { compareContent, missingKeys, clearComparison, metaData, isLoading, clearFileData } = useDiff()
 
-  const handleFileChange = ({ fileNumber, fileData, inputFrom }) => {
+  const handleFileChange = ({ fileNumber, fileData, inputFrom, url }) => {
     try {
       if (inputFrom === "file") {
         // console.log("handleFileChange", fileData)
         if (fileData.type !== "application/json") {
-          setShowToast({ show: true, message: "Please select a json file" })
+          toastRef.current.showToast("Please select a json file")
           return
         }
         if (fileData.size > 1500000) {
-          setShowToast({ show: true, message: "Please select a file less than 1.5MB" })
+          toastRef.current.showToast("Please select a file less than 1.5MB")
           return
         }
         const reader = new FileReader()
@@ -66,10 +55,11 @@ function JSONDiffChecker() {
                 name: fileData?.name,
                 content: JSON.parse(e.target.result),
                 show: true,
+                usingLink: false,
               },
             })
           } catch (error) {
-            setShowToast({ show: true, message: "Not a Valid JSON File" })
+            toastRef.current.showToast("Not a Valid JSON File")
           }
         }
       } else if (inputFrom === "link") {
@@ -82,44 +72,31 @@ function JSONDiffChecker() {
             name: fileData?.name,
             content: JSON.parse(fileData?.data),
             show: true,
+            usingLink: true,
+            url,
           },
         })
       }
     } catch (error) {
       console.log(error)
-      setShowToast({ show: true, message: "😓 Something went south. Please try again" })
+      toastRef.current.showToast("😓 Something went south. Please try again")
     }
   }
 
   const onCompare = () => {
     console.log("compare")
     if (!selectedFiles.fileOne.file || !selectedFiles.fileTwo.file) {
-      setShowToast({ show: true, message: "Please select two files to compare" })
+      toastRef.current.showToast("Please select two files to compare")
       return
     }
     const { totalCount, error } = compareContent(selectedFiles)
     if (error) {
-      setShowToast({ show: true, message: error })
+      toastRef.current.showToast(error)
       return
     }
 
-    setShowToast({
-      show: true,
-      message: `Total keys missmatched: ${totalCount}`,
-    })
+    toastRef.current.showToast(`Total keys missmatched: ${totalCount}`)
   }
-
-  useEffect(() => {
-    let timeout
-    if (showToast) {
-      timeout = setTimeout(() => {
-        setShowToast(false)
-      }, 3000)
-    }
-    return () => {
-      clearTimeout(timeout)
-    }
-  }, [showToast])
 
   const clearFile = (e) => {
     e.stopPropagation()
@@ -151,15 +128,15 @@ function JSONDiffChecker() {
     text += `Extra Keys in file "${selectedFiles.fileTwo.name}": ${missingKeys.compTwo.length}\n`
     text += missingKeys.compTwo.map((item) => item.keyValue).join("\n")
     navigator.clipboard.writeText(text)
-    setShowToast({ show: true, message: "Copied to clipboard" })
+    toastRef.current.showToast("Copied to clipboard")
     console.log(text)
   }
 
   const onKeyRowClick = (item) => {
-    if (item.fileName === selectedFiles.fileOne.name) {
+    if ([selectedFiles.fileOne.name, selectedFiles.fileOne.url].includes(item.fileName)) {
       fileOnePreviewRef.current.scrollToVisible(item.keyValue)
     }
-    if (item.fileName === selectedFiles.fileTwo.name) {
+    if ([selectedFiles.fileTwo.name, selectedFiles.fileTwo.url].includes(item.fileName)) {
       fileTwoPreviewRef.current.scrollToVisible(item.keyValue)
     }
   }
@@ -217,43 +194,10 @@ function JSONDiffChecker() {
           </RightSideBar>
         </Body>
       </Container>
-      <Toast showToast={showToast.show} message={showToast.message} />
-      <Footer />
+      <Toast ref={toastRef} />
+      {/* <Footer /> */}
     </>
   )
 }
 
 export default JSONDiffChecker
-
-const Toast = ({ message, showToast }) => (
-  <ToastWrapper showToast={showToast}>
-    <p>{message}</p>
-  </ToastWrapper>
-)
-
-/**
- * BUGS:
- * - [ ] closing bracket not rendering correctly. if having empty object.
- * - [ ] not rendering if having consecutive nested objects
- * - [ ] last remaining closing bracket not rendering correctly
- * - [ ] check for null and undefined values
- * - [ ] last line number not updating correctly
- * - [ ] render empty array/ object on the same line.
- * - [ ] from DiffView remove ref for every key. Only add to the extra keys.
- * - [ ] rows in DiffView is re-rendering on hide/show operation
- *
- * Features:
- * - [x] compare two json files
- * - [x] Fetch data from json url
- * - [x] show diff in file preview
- * - [x] show extra keys
- * - [x] click on the key to scroll to the key in the file
- * - [x] copy diff as text
- * - [x] show meta data
- * - [x] show time taken to compare
- * - [ ] Optimize the diff algorithm
- * - [ ] diff preview add load more button
- * - [ ] Scroll both the files simultaneously
- * - [ ] Add file name change option while copying diff as text
- *
- */
