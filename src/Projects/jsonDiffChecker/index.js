@@ -1,12 +1,11 @@
-import { useRef, useState } from "react"
-import { Body, Button, Container, FileContentContainer, FooterButtons, Header, RightSideBar } from "./style"
+import {useRef, useState} from "react"
+import {Body, Button, Container, FileContentContainer, FooterButtons, Header, RightSideBar} from "./style"
 import useDiff from "./useDiff"
 import MetaData from "./MetaData"
 import FilePreview from "./FilePreview"
 import Toast from "./Toast"
 import FileSelector from "./FileSelector"
 import DIFFKeysCardViewer from "./DIFFKeysCardViewer"
-import Footer from "../../Components/footer"
 
 const inititalState = {
   fileOne: {
@@ -24,13 +23,13 @@ const inititalState = {
 }
 
 function JSONDiffChecker() {
-  const [selectedFiles, setSelectedFile] = useState({ ...inititalState })
+  const [selectedFiles, setSelectedFile] = useState({...inititalState})
   const toastRef = useRef(null)
   const fileOnePreviewRef = useRef(null)
   const fileTwoPreviewRef = useRef(null)
-  const { compareContent, missingKeys, clearComparison, metaData, isLoading, clearFileData } = useDiff()
+  const {compareContent, missingKeys, clearComparison, metaData, isLoading, clearFileData} = useDiff()
 
-  const handleFileChange = ({ fileNumber, fileData, inputFrom, url }) => {
+  const handleFileChange = ({fileNumber, fileData, inputFrom, url}) => {
     try {
       if (inputFrom === "file") {
         // console.log("handleFileChange", fileData)
@@ -89,7 +88,7 @@ function JSONDiffChecker() {
       toastRef.current.showToast("Please select two files to compare")
       return
     }
-    const { totalCount, error } = compareContent(selectedFiles)
+    const {totalCount, error} = compareContent(selectedFiles)
     if (error) {
       toastRef.current.showToast(error)
       return
@@ -115,7 +114,7 @@ function JSONDiffChecker() {
   }
 
   const clearAll = () => {
-    setSelectedFile({ ...inititalState })
+    setSelectedFile({...inititalState})
     clearComparison()
   }
 
