@@ -273,3 +273,45 @@ export const MetaDataContainer = styled.div`
     margin: 10px 0;
   }
 `
+
+export const CodeFormatRow = styled.code`
+  width: fit-content;
+  padding-left: ${(_) => _.level * 15}px;
+  background-color: ${(_) => (_.isMiss ? theme.COLOR.syntaxBackgroundRed : "transparent")};
+  display: flex;
+  flex-wrap: nowrap;
+  text-wrap: nowrap;
+  color: ${(_) => (_.isMiss ? theme.COLOR.syntaxRed : theme.COLOR.black)};
+  .Key {
+    color: ${(_) => (_.isMiss ? theme.COLOR.syntaxRed : theme.COLOR.syntaxGreen)};
+  }
+  .Value {
+    color: ${(_) => (_.isMiss ? theme.COLOR.syntaxRed : theme.COLOR.syntaxBlue)};
+  }
+`
+
+export const DiffViewerContainer = styled.div`
+  width: max-content;
+  br {
+    content: "";
+    display: block;
+    margin: 0.3rem 0;
+  }
+  tr {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .lineNumber {
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+    text-align: right;
+    min-width: 30px;
+    font-family: "Courier New", Courier, monospace;
+  }
+  .highlight {
+    border: 1px solid ${theme.COLOR.black};
+    border-radius: 5px;
+    background-color: ${theme.COLOR.syntaxBackgroundGreen};
+  }
+`

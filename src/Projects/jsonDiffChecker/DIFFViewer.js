@@ -1,6 +1,8 @@
-import React, { forwardRef, useImperativeHandle } from "react"
-import styled from "styled-components"
-import { theme } from "./theme"
+/* eslint-disable react/prop-types */
+import { forwardRef, useImperativeHandle } from "react"
+import PropTypes from "prop-types"
+import { CodeFormatRow, DiffViewerContainer } from "./style"
+import RenderContentRow from "./RenderContentRow"
 
 const DIFFViewer = forwardRef(({ missingKeysSet, jsonArray }, ref) => {
   let bracketArr = []
@@ -22,140 +24,79 @@ const DIFFViewer = forwardRef(({ missingKeysSet, jsonArray }, ref) => {
     },
   }))
 
-  const RenderItem = ({ item, nextItem }) => {
-    const lastKey = item.keyValue.split(".").pop()
-    if (item.type === "array" || item.type === "object") {
-      bracketArr.push({ value: item.type === "array" ? "]" : "}", level: item.level })
-    }
-    const ref = React.createRef()
-    refObj[item.keyValue] = ref
-
-    let levelDown = item.level - (nextItem.level || 0)
-    let renderEnd = []
-    if (levelDown > 0) {
-      renderEnd = Array(levelDown)
-        .fill(0)
-        ?.map((item) => {
-          const bracket = bracketArr.pop()
-          return (
-            <tr key={lineNumber}>
-              <td className="lineNumber">{lineNumber++}</td>
-              <td>
-                <CodeFormatRow level={bracket.level + 1}>{bracket.value},</CodeFormatRow>
-              </td>
-            </tr>
-          )
-        })
-    }
-    // console.log(lastKey, bracketArr, item.level, nextItem.level, levelDown)
-
-    return (
-      <>
-        <tr ref={ref} key={item.keyValue}>
-          <td className="lineNumber">{lineNumber++}</td>
-          <td>
-            <CodeFormatRow isMiss={missingKeysSet.has(item.keyValue)} level={item.level + 1}>
-              {isNaN(lastKey) && (
-                <>
-                  <span className="Key">"{lastKey}"</span>
-                  <span className="colon"> : </span>
-                </>
-              )}
-              {item.type === "string" ? (
-                <span className="Value">"{item.value}"</span>
-              ) : item.type === "array" ? (
-                "["
-              ) : (
-                "{"
-              )}
-              {item.level === nextItem.level && (item.type === "object" || item.type === "array")
-                ? bracketArr.pop().value
-                : ""}
-              {item.level === nextItem.level && item.type !== "array" && item.type !== "object" && ","}
-            </CodeFormatRow>
-          </td>
-        </tr>
-        {renderEnd.map((item) => item)}
-      </>
-    )
-  }
-
   return (
-    <Container>
+    <DiffViewerContainer>
       <table>
         <tbody>
           <tr>
             <td className="lineNumber">1</td>
             <td>
-              <CodeFormatRow level={0}>{"{"}</CodeFormatRow>
+              <CodeFormatRow level={0}>{isNaN(jsonArray[0].keyValue) ? "{" : "["}</CodeFormatRow>
             </td>
           </tr>
-          {jsonArray.map((item, index) => {
-            return <RenderItem item={item} nextItem={jsonArray[index + 1] || {}} />
+          {jsonArray.map(({ type, keyValue, level, value }, index) => {
+            let bracketsToRender = []
+            let valueToDisplay = type === "object" ? "{" : type === "array" ? "[" : `"${value}",`
+
+            if (bracketArr.length > 0 && bracketArr[bracketArr.length - 1].level >= level) {
+              const totalBRemove = bracketArr[bracketArr.length - 1].level - level + 1
+              for (let i = 0; i < totalBRemove; i++) {
+                const bracket = bracketArr.pop()
+                bracketsToRender.push(
+                  <tr key={lineNumber}>
+                    <td className="lineNumber">{lineNumber++}</td>
+                    <td>
+                      <CodeFormatRow level={bracket.level + 1}>{bracket.value},</CodeFormatRow>
+                    </td>
+                  </tr>
+                )
+              }
+            }
+
+            if (type === "array") {
+              bracketArr.push({ value: "]", level: level })
+            }
+            if (type === "object") {
+              bracketArr.push({ value: "}", level: level })
+            }
+
+            return (
+              <>
+                {bracketsToRender.map((item) => item)}
+                <RenderContentRow
+                  isMissing={missingKeysSet.has(keyValue)}
+                  refObj={refObj}
+                  key={index}
+                  lineNumber={lineNumber++}
+                  value={valueToDisplay}
+                  {...{ keyValue, level }}
+                />
+              </>
+            )
           })}
-          {/* {console.log(bracketArr)} */}
-          {/* {bracketArr.length > 0 &&
-            bracketArr.toReversed().map((item) => {
-              return (
-                <tr key={lineNumber}>
-                  <td className="lineNumber">{lineNumber++}</td>
-                  <td>
-                    <CodeFormatRow level={item.level}>{item.value}</CodeFormatRow>
-                  </td>
-                </tr>
-              )
-            })} */}
+          {bracketArr.length > 0 &&
+            bracketArr.toReversed().map((bracket) => (
+              <tr key={lineNumber}>
+                <td className="lineNumber">{lineNumber++}</td>
+                <td>
+                  <CodeFormatRow level={bracket.level + 1}>{bracket.value},</CodeFormatRow>
+                </td>
+              </tr>
+            ))}
           <tr>
             <td className="lineNumber">{lineNumber}</td>
             <td>
-              <CodeFormatRow level={0}>{"}"}</CodeFormatRow>
+              <CodeFormatRow level={0}>{isNaN(jsonArray[0].keyValue) ? "}" : "]"}</CodeFormatRow>
             </td>
           </tr>
         </tbody>
       </table>
-    </Container>
+    </DiffViewerContainer>
   )
 })
 
-export default React.memo(DIFFViewer)
-
-const Container = styled.div`
-  width: max-content;
-  br {
-    content: "";
-    display: block;
-    margin: 0.3rem 0;
-  }
-  tr {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-  .lineNumber {
-    font-size: 0.8rem;
-    margin-right: 0.5rem;
-    text-align: right;
-    min-width: 30px;
-  }
-  .highlight {
-    border: 1px solid ${theme.COLOR.black};
-    border-radius: 5px;
-    background-color: ${theme.COLOR.syntaxBackgroundGreen};
-  }
-`
-
-const CodeFormatRow = styled.code`
-  width: fit-content;
-  padding-left: ${(_) => _.level * 10}px;
-  background-color: ${(_) => (_.isMiss ? theme.COLOR.syntaxBackgroundRed : "transparent")};
-  display: flex;
-  flex-wrap: nowrap;
-  text-wrap: nowrap;
-  color: ${(_) => (_.isMiss ? theme.COLOR.syntaxRed : theme.COLOR.black)};
-  .Key {
-    color: ${(_) => (_.isMiss ? theme.COLOR.syntaxRed : theme.COLOR.syntaxGreen)};
-  }
-  .Value {
-    color: ${(_) => (_.isMiss ? theme.COLOR.syntaxRed : theme.COLOR.syntaxBlue)};
-  }
-`
+DIFFViewer.propTypes = {
+  missingKeysSet: PropTypes.object,
+  jsonArray: PropTypes.arrayOf(PropTypes.object),
+}
+export default DIFFViewer

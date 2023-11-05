@@ -1,7 +1,9 @@
-import React, { forwardRef, useImperativeHandle, useRef, useState } from "react"
+import { forwardRef, useImperativeHandle, useRef, useState } from "react"
 import { FileContentPreview, FilePreviewContainer } from "./style"
-import DIFFViewer from "./DIFFViewer"
+
+import PropTypes from "prop-types"
 import ChevronIcon from "./ChevronIcon"
+import DIFFViewer from "./DIFFViewer"
 
 const FilePreview = forwardRef(({ name, onClearClick, file, flattenObject, missingKeys }, ref) => {
   const content = file.content
@@ -15,9 +17,11 @@ const FilePreview = forwardRef(({ name, onClearClick, file, flattenObject, missi
     },
   }))
 
+  console.log(file)
+
   return (
     <FilePreviewContainer show={isVisible}>
-      <div className="fileTitle">
+      <div className="fileTitle" title={file.usingLink ? file.url : file.name}>
         <p
           className="hideButton"
           onClick={(e) => {
@@ -27,7 +31,7 @@ const FilePreview = forwardRef(({ name, onClearClick, file, flattenObject, missi
         >
           <ChevronIcon right={!isVisible} />
         </p>
-        {file.name} ({missingKeys.length})
+        {file.usingLink ? `${file.url?.trunc(30)}` : `${file.name?.trunc(30)} (${missingKeys.length})`}
         <p name={name} onClick={onClearClick} className="clearButton">
           x
         </p>
@@ -43,4 +47,13 @@ const FilePreview = forwardRef(({ name, onClearClick, file, flattenObject, missi
   )
 })
 
+FilePreview.propTypes = {
+  name: PropTypes.string,
+  onClearClick: PropTypes.func,
+  file: PropTypes.object,
+  flattenObject: PropTypes.array,
+  missingKeys: PropTypes.array,
+}
+
+FilePreview.displayName = "FilePreview"
 export default FilePreview
